@@ -1,0 +1,22 @@
+{
+	"name": "tsu-mapconnect-meta-block",
+	"version": "0.0.1",
+	"description": "Metadata for use with map connect plugin",
+	"author": "Marco Nagel",
+	"license": "GPL-2.0-or-later",
+	"homepage": "wwww.tsu-nami.de",
+	"main": "blocks/tsu-mapconnect-meta-block/build/index.js",
+	"scripts": {
+		"build": "wp-scripts build blocks/tsu-mapconnect-meta-block/src/index.js --output-path=blocks/tsu-mapconnect-meta-block/build/",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start": "wp-scripts start --webpack-copy-php",
+                "make-json": "wp i18n make-json languages/ --no-purge"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^26.1.0"
+	}
+}

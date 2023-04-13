@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "tsum-metafields/tsu-mapconnect-meta-block",
+	"version": "0.0.1",
+	"title": "Map Connect Metadata",
+	"category": "widgets",
+	"icon": "admin-site-alt2",
+	"description": "Metadata for use with map connect plugin",
+	"supports": {
+		"html": false,
+		"className": false,
+		"customClassName": false        
+	},
+	"textdomain": "tsu-mapconnect",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css",
+	"render": "file:./build/render.php"   
+}

@@ -1,0 +1,166 @@
+# Blank WordPress Pot
+# Copyright 2014 ...
+# This file is distributed under the GNU General Public License v3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Blank WordPress Pot v1.0.0\n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2023-04-13 12:50+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
+"Language-Team: Your Team <translations@example.com>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 3.1\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: node_modules\n"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:116
+msgid "Mapconnect Metadata block"
+msgstr "Mapconnect-Metadatenblock"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:121
+msgid "Area name"
+msgstr "Name des Gebiets"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:127 lib/ui/TSUMMetaboxes.php:74
+msgid "Area postcodes (comma-separated)"
+msgstr "Postleitzahlen (durch Kommas getrennt)"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:133
+msgid "Area link"
+msgstr "Link zur Webseite des Gebiets"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:141
+msgid "Contact email"
+msgstr "Kontakt E-Mail"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:147
+msgid "Area logo (numeric id or link)"
+msgstr "Bereichslogo (numerische ID oder Link)"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:153
+msgid "Activities (comma-separated)"
+msgstr "Aktivitäten (durch Kommas getrennt)"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:159
+#: lib/ui/TSUMMetaboxes.php:113
+msgid "Descriptive text"
+msgstr "Beschreibender Text"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:167
+msgid "Description of your area"
+msgstr "Beschreibung Ihrer Region"
+
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:173
+msgid ""
+"This block is not rendered. It is only for storing metadata for your mapping "
+"needs which will be sent via the REST API."
+msgstr ""
+"Dieser Block wird nicht gerendert. Es dient nur zum Speichern von Metadaten "
+"für Ihre Mapping-Anforderungen, die über die REST-API gesendet werden."
+
+#: blocks/tsu-mapconnect-meta-block/src/render.php:2
+msgid "Map Connect Metadata – hello from a dynamic block!"
+msgstr "Map Connect Metadaten – Hallo aus einem dynamischen Block!"
+
+#: lib/api/TSUMAPIOutput.php:89 lib/api/TSUMAPIOutput.php:147
+msgid "Your request did not return any data. You requested data for:"
+msgstr ""
+"Ihre Anfrage hat keine Daten zurückgegeben. Sie haben Daten angefordert für:"
+
+#: lib/ui/TSUMMetaboxes.php:37
+msgid "MapConnect area box"
+msgstr "MapConnect Gebietsdatenbox"
+
+#: lib/ui/TSUMMetaboxes.php:68
+msgid "Name of area"
+msgstr "Name des Gebiets"
+
+#: lib/ui/TSUMMetaboxes.php:80
+msgid "Logo or other image"
+msgstr "Logo oder anderes Bild"
+
+#: lib/ui/TSUMMetaboxes.php:83
+msgid "logo image"
+msgstr "Logo-Bild"
+
+#: lib/ui/TSUMMetaboxes.php:89
+msgid "Contact email address"
+msgstr "Kontakt E-Mail Adresse"
+
+#: lib/ui/TSUMMetaboxes.php:95
+msgid "Link to area webpage"
+msgstr "Link zur Webseite des Gebiets"
+
+#: lib/ui/TSUMMetaboxes.php:101
+msgid "Activities in area (comma-separated)"
+msgstr "Aktivitäten/Angebote im Gebiet (durch Kommas getrennt)"
+
+#: lib/ui/TSUMMetaboxes.php:107
+msgid "Socialmedia presence"
+msgstr "Social-Media-Präsenzen"
+
+#: lib/ui/TSUMMetaboxes.php:119
+msgid ""
+"You are currently using the Map Connect plugin with the Classic Editor "
+"plugin for WordPress. We strongly recommend using Gutenberg instead, since "
+"Classic Editor is deprecated and we will stop supporting it in the near "
+"future."
+msgstr ""
+"Sie verwenden derzeit das Map Connect-Plugin mit dem Classic Editor-Plugin "
+"für WordPress. Wir empfehlen dringend, stattdessen Gutenberg zu verwenden, "
+"da Classic Editor veraltet ist und wir ihn in naher Zukunft nicht mehr "
+"unterstützen werden."
+
+#: lib/util/TSUMCleanUp.php:28
+msgid ""
+"Error with handling input according postcodes. Some data has been filtered "
+"out."
+msgstr ""
+"Fehler bei der Handhabung von Eingaben nach Postleitzahlen. Einige Daten "
+"wurden herausgefiltert."
+
+#: tsu-mapconnect.php:14
+msgid "Map Connect"
+msgstr "Map Connect"
+
+#: tsu-mapconnect.php:15
+msgid ""
+"Map connect plugin to connect specific page data with frontend map "
+"application using the wordpress REST api."
+msgstr ""
+"Map Connect Plugin, um bestimmte Seitendaten mit einer Frontend-"
+"Kartenanwendung über die WordPress REST API zu verbinden."
+
+#~ msgid "Mapconnect Metadata"
+#~ msgstr "Mapconnect-Metadaten"
+
+#~ msgid "Area postcodes"
+#~ msgstr "Postleitzahlen"
+
+#~ msgid "Area logo"
+#~ msgstr "Logo des Gebiets"
+
+#~ msgid "Activities"
+#~ msgstr "Aktivitäten"
+
+#~ msgid ""
+#~ "This block is not rendered. Use the sidebar inspector controls to setup "
+#~ "metadata for use in the frontend map."
+#~ msgstr ""
+#~ "Dieser Block wird nicht gerendert. Verwenden Sie die Steuerelemente des "
+#~ "Seitenleisteninspektors, um Metadaten für die Verwendung in der Frontend-"
+#~ "Map einzurichten."
+
+#~ msgid "Map Connect Metadata – hello from the editor!"
+#~ msgstr "Map Connect Metadaten – Hallo aus der Redaktion!"
