@@ -8,6 +8,8 @@ namespace lib;
  *
  * @author marconagel
  */
+defined( 'ABSPATH' ) or die( 'Direct access not allowed!' );
+
 class TSUMCCore {
     public function __construct() {
         //libs

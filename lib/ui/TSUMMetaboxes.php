@@ -11,6 +11,8 @@ namespace lib\ui;
  *
  * @author marconagel
  */
+defined( 'ABSPATH' ) or die( 'Direct access not allowed!' );
+
 class TSUMMetaboxes {
     
     private $boxType;

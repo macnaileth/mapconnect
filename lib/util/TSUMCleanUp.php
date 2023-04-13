@@ -8,6 +8,8 @@ namespace lib\util;
  *
  * @author marconagel
  */
+defined( 'ABSPATH' ) or die( 'Direct access not allowed!' );
+
 class TSUMCleanUp {
     /**
      * tsumCleanPCString ( $string )
