@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2023-04-13 12:50+0200\n"
+"POT-Creation-Date: 2023-04-16 14:10+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -32,7 +32,7 @@ msgstr "Mapconnect-Metadatenblock"
 msgid "Area name"
 msgstr "Name des Gebiets"
 
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:127 lib/ui/TSUMMetaboxes.php:74
+#: blocks/tsu-mapconnect-meta-block/src/edit.js:127 lib/ui/TSUMMetaboxes.php:76
 msgid "Area postcodes (comma-separated)"
 msgstr "Postleitzahlen (durch Kommas getrennt)"
 
@@ -53,7 +53,7 @@ msgid "Activities (comma-separated)"
 msgstr "Aktivitäten (durch Kommas getrennt)"
 
 #: blocks/tsu-mapconnect-meta-block/src/edit.js:159
-#: lib/ui/TSUMMetaboxes.php:113
+#: lib/ui/TSUMMetaboxes.php:115
 msgid "Descriptive text"
 msgstr "Beschreibender Text"
 
@@ -73,44 +73,39 @@ msgstr ""
 msgid "Map Connect Metadata – hello from a dynamic block!"
 msgstr "Map Connect Metadaten – Hallo aus einem dynamischen Block!"
 
-#: lib/api/TSUMAPIOutput.php:89 lib/api/TSUMAPIOutput.php:147
-msgid "Your request did not return any data. You requested data for:"
-msgstr ""
-"Ihre Anfrage hat keine Daten zurückgegeben. Sie haben Daten angefordert für:"
-
-#: lib/ui/TSUMMetaboxes.php:37
+#: lib/ui/TSUMMetaboxes.php:39
 msgid "MapConnect area box"
 msgstr "MapConnect Gebietsdatenbox"
 
-#: lib/ui/TSUMMetaboxes.php:68
+#: lib/ui/TSUMMetaboxes.php:70
 msgid "Name of area"
 msgstr "Name des Gebiets"
 
-#: lib/ui/TSUMMetaboxes.php:80
+#: lib/ui/TSUMMetaboxes.php:82
 msgid "Logo or other image"
 msgstr "Logo oder anderes Bild"
 
-#: lib/ui/TSUMMetaboxes.php:83
+#: lib/ui/TSUMMetaboxes.php:85
 msgid "logo image"
 msgstr "Logo-Bild"
 
-#: lib/ui/TSUMMetaboxes.php:89
+#: lib/ui/TSUMMetaboxes.php:91
 msgid "Contact email address"
 msgstr "Kontakt E-Mail Adresse"
 
-#: lib/ui/TSUMMetaboxes.php:95
+#: lib/ui/TSUMMetaboxes.php:97
 msgid "Link to area webpage"
 msgstr "Link zur Webseite des Gebiets"
 
-#: lib/ui/TSUMMetaboxes.php:101
+#: lib/ui/TSUMMetaboxes.php:103
 msgid "Activities in area (comma-separated)"
 msgstr "Aktivitäten/Angebote im Gebiet (durch Kommas getrennt)"
 
-#: lib/ui/TSUMMetaboxes.php:107
+#: lib/ui/TSUMMetaboxes.php:109
 msgid "Socialmedia presence"
 msgstr "Social-Media-Präsenzen"
 
-#: lib/ui/TSUMMetaboxes.php:119
+#: lib/ui/TSUMMetaboxes.php:121
 msgid ""
 "You are currently using the Map Connect plugin with the Classic Editor "
 "plugin for WordPress. We strongly recommend using Gutenberg instead, since "
@@ -122,13 +117,30 @@ msgstr ""
 "da Classic Editor veraltet ist und wir ihn in naher Zukunft nicht mehr "
 "unterstützen werden."
 
-#: lib/util/TSUMCleanUp.php:28
+#: lib/util/TSUMCleanUp.php:30
 msgid ""
 "Error with handling input according postcodes. Some data has been filtered "
 "out."
 msgstr ""
 "Fehler bei der Handhabung von Eingaben nach Postleitzahlen. Einige Daten "
 "wurden herausgefiltert."
+
+#: lib/util/TSUMMsgHandler.php:22
+msgid "Request successful. You requested data for:"
+msgstr "Anfrage erfolgreich. Sie haben Daten angefordert für:"
+
+#: lib/util/TSUMMsgHandler.php:28
+msgid "Your request did not return any data. You requested data for:"
+msgstr ""
+"Ihre Anfrage hat keine Daten zurückgegeben. Sie haben Daten angefordert für:"
+
+#: lib/util/TSUMMsgHandler.php:34
+msgid ""
+"Something went wrong with your request. Check again. If this keeps "
+"happening, contact the site admin:"
+msgstr ""
+"Bei Ihrer Anfrage ist etwas schief gelaufen. Überprüfen Sie es erneut. Wenn "
+"dies weiterhin der Fall ist, wenden Sie sich an den Site-Administrator:"
 
 #: tsu-mapconnect.php:14
 msgid "Map Connect"

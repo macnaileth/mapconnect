@@ -15,6 +15,7 @@ class TSUMAPIOutput {
     public function __construct() { 
         //load up helpers lib
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMCleanUp.php';
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMMsgHandler.php';
         //init routes
         add_action( 'rest_api_init', array( $this, 'tsumRegisterRoutes' ) );
     }
@@ -60,7 +61,20 @@ class TSUMAPIOutput {
                 'required' => true        
               ),),
           ) 
-        );        
+        );
+        //resolve area(s) via activities
+        register_rest_route( $namespace . '/' . $base, '/activity/(?P<activity>[\w_-]+)', array(
+          'methods' => 'GET',
+          'callback' => array( $this, 'tsumAreaByActivity' ),
+          'permission_callback' => '__return_true',  
+          'args' => array(
+              'activity' => array(
+                'validate_callback' => function($param, $request, $key) {
+                  return esc_attr( $param ); //return escaped string
+                },
+                'required' => true        
+              ),),            
+        ) );               
     }
     /**
      * tsumAreaName( $data )
@@ -75,20 +89,21 @@ class TSUMAPIOutput {
         
         //check if existing
         $pages = get_pages();
-        $notice = '';
+        $notice = [];
         
         foreach($pages as $page) {
             //get data and check if relevant stuff exists
             $reqName = \lib\util\TSUMStringHelpers::tsumConvertToUmlaute($data['areaname'], true);
-            //$reqName = str_replace( '_', ' ', $data['areaname'] ); //replace _ with whitespace
-            //$reqName = str_replace( '_', ' ', $data['areaname'] ); //replace ue/oe/ae with Umlaute
             
             $pAreaName = get_post_meta( $page->ID, '_meta_fields_tsum_areaname', true );
             if ( !empty($pAreaName) && $pAreaName == $reqName ) {
                 //return area to response
-                return $this->tsumArea($page->ID, $reqName);
+                return [ 
+                            'response' => \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($reqName), 
+                            'area' => $this->tsumArea($page->ID, $reqName) 
+                        ];
             } else {
-                $notice = esc_html__( 'Your request did not return any data. You requested data for:', 'tsu-mapconnect' ) . ' ' . $reqName;
+                $notice = \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($reqName, 404);
             }           
         }
         return $notice;
@@ -100,7 +115,10 @@ class TSUMAPIOutput {
      * @return array
      */
     public function tsumAreaListAll() {
-        $response = ['areas' => []];
+        $response = [   
+                        'response' => \lib\util\TSUMMsgHandler::tsumAPIReturnMessage('AREA_LIST'),
+                        'areas' => []
+                    ];
         
         //get the pages and return the needed params in API
         $pages = get_pages();
@@ -146,9 +164,42 @@ class TSUMAPIOutput {
                 }                 
             }
         }       
-        return empty( $response['match'] ) ? $response['notice'] = [ 'notice' => esc_html__( 'Your request did not return any data. You requested data for:', 'tsu-mapconnect' ) . ' ' . $reqPostCode ] : $response;
+        return empty( $response['match'] ) ? $response = \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($reqPostCode, 404) : $response;
     }  
-    
+    public function tsumAreaByActivity ( $data ) {
+        //load string helpers here
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMStringHelpers.php';
+        
+        //check if existing
+        $pages = get_pages();
+        $response = [
+                        'response' => [],
+                        'match' => []            
+                    ];
+        
+        foreach($pages as $page) {
+            //get data and check if relevant stuff exists
+            $activity = \lib\util\TSUMStringHelpers::tsumConvertToUmlaute($data['activity'], true);
+            
+            $pAreaName = get_post_meta( $page->ID, '_meta_fields_tsum_areaname', true );
+            if ( !empty($pAreaName) &&  strlen( $data['activity'] ) > 2 ) {
+                //get activities lowercase for matching
+                $pAreaAct = strtolower( 'a' . get_post_meta( $page->ID, '_meta_fields_tsum_areaactivities', true ) );
+                
+                if ( strpos( $pAreaAct, strtolower( $data['activity'] ) ) ) {
+                    $response[ 'response' ] = \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($activity, 200);
+                    $area = $this->tsumArea( $page->ID, $pAreaName ); 
+                    array_push($response['match'], $area);    
+                }    
+
+            }       
+        }
+        
+        if ( empty( $response[ 'response' ] )) {
+                $response[ 'response' ] = \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($activity, 404);
+        }             
+        return $response;     
+    }
     /**
      * tsumArea( $id, $name )
      * function to create an array containg a single area to return to the API
@@ -157,7 +208,7 @@ class TSUMAPIOutput {
      * @param string $name name of area
      * @return array of area data
      */
-    private function tsumArea( $id, $name ){
+    private function tsumArea( $id, $name ) {
         
                 //handle logo conversion to usable string
                 $logoRAW = get_post_meta( $id, '_meta_fields_tsum_arealogo', true );
