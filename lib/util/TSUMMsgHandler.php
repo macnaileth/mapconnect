@@ -27,6 +27,12 @@ class TSUMMsgHandler {
                             'code' => 'not_found',
                             'message' => esc_html__( 'Your request did not return any data. You requested data for:', 'tsu-mapconnect' ) . ' ' . $request
                         ];
+            case 503:
+                return  [ 
+                            'status' => 503,
+                            'code' => 'service_unavailable',
+                            'message' => esc_html__( 'The server you requested data from is not ready to handle your request. Probably server is overloaded or down for maintance:', 'tsu-mapconnect' ) . ' ' . $request
+                        ];                
             default:
                 return  [ 
                             'status' => 400,

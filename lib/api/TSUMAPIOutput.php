@@ -149,7 +149,9 @@ class TSUMAPIOutput {
         $pages = get_pages();
         $reqPostCode = $data['postcode'];
         
-        $response = [ 'requested-pc' => $reqPostCode, 'match' => [] ];
+        $response = [ 'requested-pc' => $reqPostCode, 'location' => [], 'match' => [] ];
+        
+        array_push($response['location'], $this->tsumGetLocation( $reqPostCode ) );
         
         foreach($pages as $page) {
             //get data and check if relevant stuff exists
@@ -242,5 +244,30 @@ class TSUMAPIOutput {
                 
         return $area;
     }
-    
+    /**
+     * tsumGetLocation ( $string, $country = 'de' )
+     * 
+     * retrieve place by plz using openplzapi.org s api. At the moment, it only works with postalcodes
+     * 
+     * @param string $string string containing the paramter, at the moment only a postal code is accepted
+     * @param string $country allows to change the country to look up. default: de
+     * @return array returns json object from retrieved data
+     */
+    private function tsumGetLocation ( $string, $country = 'de' ) {
+        
+        $reqURL = 'https://openplzapi.org/' . $country . '/Localities?postalCode=' . $string;
+        
+        if (is_numeric( $string )) {
+            //by postcode
+            $json = file_get_contents( $reqURL );
+            $location = [ 'source' => 'https://openplzapi.org/', 'request' => $reqURL ];
+            $location['data'] = json_decode($json);
+            
+            return $location;
+        } else {
+            //TODO: Allow string search for locations later
+            return [ 'TODO' => 'Service under construction.' ];
+        }
+        
+    }
 }
