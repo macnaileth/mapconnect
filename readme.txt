@@ -33,6 +33,7 @@ none ATM
 11.04.2023 - finished all basic sanitization and validation stuff. Supports now Gutenberg Block Editor aswell as Classic Editor plugin for data input: Metabox and React Block provided.
 13.04.2023 - Added functionality to retrieve an area by entering a postcode
 16.04.2023 - Added route for getting areas by activites, added some html status codes
+18.04.2023 - Added OpenPLZ API integration and some status messages
 
 
 = 0.0.1 =
