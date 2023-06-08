@@ -15,6 +15,7 @@ class TSUMCCore {
         //libs
         require_once TSU_MC_PLUGIN_PATH . '/lib/ui/TSUMMetaboxes.php';
         require_once TSU_MC_PLUGIN_PATH . '/lib/api/TSUMAPIOutput.php';
+        
         //register metafields for Guteberg blocks
         add_action( 'init', array( $this, 'tsumRegisterMetafields' ) );
         //load Gutenberg blocks
@@ -72,6 +73,7 @@ class TSUMCCore {
      * function to register Gutenberg blocks belonging to plugin
      */
     function tsumRegisterBlocks() {
-            register_block_type( TSU_MC_PLUGIN_PATH. 'blocks/tsu-mapconnect-meta-block/' );
+            register_block_type( TSU_MC_PLUGIN_PATH. 'blocks/tsu-mapconnect-meta-block/' ); //metadata block
+            register_block_type( TSU_MC_PLUGIN_PATH. 'blocks/tsu-mapconnect-map-block/' ); //mapplication block for map placement
     }    
 }

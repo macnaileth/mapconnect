@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "tsum-metafields/tsu-mapconnect-map-block",
+	"version": "0.0.1",
+	"title": "Map Connect Mapplication",
+	"category": "media",
+	"icon": "admin-site-alt",
+	"description": "Block to place and configure the map application on a wordpress page or post",
+	"supports": {
+		"html": false,
+		"className": false,
+		"customClassName": false        
+	},
+	"textdomain": "tsu-mapconnect",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css" 
+}

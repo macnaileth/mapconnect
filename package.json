@@ -1,13 +1,14 @@
 {
 	"name": "tsu-mapconnect-meta-block",
-	"version": "0.0.1",
-	"description": "Metadata for use with map connect plugin",
+	"version": "0.0.2",
+	"description": "Metadata and map blocks for use with map connect plugin",
 	"author": "Marco Nagel",
 	"license": "GPL-2.0-or-later",
 	"homepage": "wwww.tsu-nami.de",
 	"main": "blocks/tsu-mapconnect-meta-block/build/index.js",
 	"scripts": {
-		"build": "wp-scripts build blocks/tsu-mapconnect-meta-block/src/index.js --output-path=blocks/tsu-mapconnect-meta-block/build/",
+		"build:meta": "wp-scripts build blocks/tsu-mapconnect-meta-block/src/index.js --output-path=blocks/tsu-mapconnect-meta-block/build/",
+                "build:map": "wp-scripts build blocks/tsu-mapconnect-map-block/src/index.js --output-path=blocks/tsu-mapconnect-map-block/build/",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",

@@ -1,0 +1,68 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-tsum-metafields-tsu-mapconnect-meta-block {
+    background-color: #f6f7f7;
+    color: #000;
+}
+.tsum-metablock-desc {
+    background-color: #fff;
+    color: #2c3338;
+    border: 1px solid #757575;
+    border-radius: 0.15rem;    
+    padding: 0px 10px;
+    font-size: 16px;
+    min-height: 100px;
+}
+.tsum-pseudolabel {
+    font-size: 11px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: calc(8px);
+    padding: 0px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.tsum-metablock-container label {
+    font-weight: normal;
+}
+.tsum-remark-small {
+    font-size: 11px;
+    text-align: right;
+    margin: 10px 0 10px;
+}
+.tsum-metablock-container {
+    display: block;
+}
+.tsum-metablock-wrapper {
+    grid-column: 1;
+}
+/* breakpoints */
+@media (min-width: 576px) { 
+       
+}
+@media (min-width: 600px) { 
+    .tsum-metablock-desc { 
+        font-size: 13px;
+    }
+}
+@media (min-width: 960px) { 
+    .tsum-metablock-container {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-column-gap: 10px;
+    }
+    .tsum-metablock-wrapper {
+        grid-column: 1 / span 2;
+    }  
+}
+@media (min-width: 1200px) { 
+       
+}
+@media (min-width: 1400px) { 
+   
+}
