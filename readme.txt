@@ -1,12 +1,12 @@
-=== Map Connect Metadata ===
-Contributors:      Marco Nagel
+=== Map Connect Metadata and Map Application ===
+Contributors:      Marco Nagel & Kerstin Huppenbauer
 Tags:              block
 Tested up to:      6.1
-Stable tag:        0.0.1
+Stable tag:        0.0.2
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Metadata for use with map connect plugin
+Map Connect plugin with metadata and map application block for WordPress using different APIs including WordPress REST API
 
 == Description ==
 
@@ -19,6 +19,15 @@ API ROUTES:
 
 /tsu-mapconnect/v1/area/activity/<activity> => retrieves an area by activity
 
+SHORTCODE:
+
+If WP Classic is used, the map app can be placed using the WordPress Shortcode API. Use the following code:
+
+[mapplication base_url="<Base URL to be used>" metadata_url="<URL to the metadata REST API route>" database_url="<URL to your Postgres SQL DB for geometry data>" colors=[<Not used atm>]]
+
+For most cases, it will be sufficent to place the shortcode like this: [mapplication]. 
+Advanced users who would like to build their stuff themsselves also refer to Kerstin Huppenbauers nextjs-dimb repo for the map application found here: https://github.com/khuppenbauer/nextjs-dimb
+
 == Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins/tsu-mapconnect` directory, or install the plugin through the WordPress plugins screen directly.
@@ -30,12 +39,14 @@ API ROUTES:
 none ATM
 
 == Changelog ==
+08.06.2023 - Added a skeleton block for the future map application to be placed on WP pages and posts. 
 11.04.2023 - finished all basic sanitization and validation stuff. Supports now Gutenberg Block Editor aswell as Classic Editor plugin for data input: Metabox and React Block provided.
 13.04.2023 - Added functionality to retrieve an area by entering a postcode
 16.04.2023 - Added route for getting areas by activites, added some html status codes
 18.04.2023 - Added OpenPLZ API integration and some status messages
+17.06.2023 - Added configuration pane to Gutenberg react block and shortcode for app placement
 
 
-= 0.0.1 =
+= 0.0.2 =
 * Release
 

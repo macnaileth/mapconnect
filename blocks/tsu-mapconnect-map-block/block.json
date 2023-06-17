@@ -15,5 +15,13 @@
 	"textdomain": "tsu-mapconnect",
 	"editorScript": "file:./build/index.js",
 	"editorStyle": "file:./build/index.css",
-	"style": "file:./build/style-index.css" 
+	"style": "file:./build/style-index.css", 
+        "attributes": {
+                "MC_baseUrldef": { "type": "string", "default": "<DEFAULT>" },
+                "MC_metaUrldef": { "type": "string", "default": "<DEFAULT>" },   
+                "MC_dataUrldef": { "type": "string", "default": "<DEFAULT>" },         
+                "MC_baseUrlset": { "type": "string", "default": "" },
+                "MC_metaUrlset": { "type": "string", "default": "" },      
+                "MC_dataUrlset": { "type": "string", "default": "" }         
+	}    
 }

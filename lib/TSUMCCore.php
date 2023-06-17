@@ -15,6 +15,7 @@ class TSUMCCore {
         //libs
         require_once TSU_MC_PLUGIN_PATH . '/lib/ui/TSUMMetaboxes.php';
         require_once TSU_MC_PLUGIN_PATH . '/lib/api/TSUMAPIOutput.php';
+        require_once TSU_MC_PLUGIN_PATH . '/lib/front/TSUMMapplication.php';
         
         //register metafields for Guteberg blocks
         add_action( 'init', array( $this, 'tsumRegisterMetafields' ) );
@@ -24,6 +25,8 @@ class TSUMCCore {
         $tsumMBXPage = new ui\TSUMMetaboxes();
         //start broadcasting data to api endpoints       
         $tsumAPI = new api\TSUMAPIOutput();
+        //add shortcodes
+        $tsumSCode = new front\TSUMMapplication();
     }  
     /**
      * tsumRegisterMetafields()

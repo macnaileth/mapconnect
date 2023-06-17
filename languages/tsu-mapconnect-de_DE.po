@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2023-04-18 18:12+0200\n"
+"POT-Creation-Date: 2023-06-16 15:09+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -20,9 +20,55 @@ msgstr ""
 "esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
 "_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Generator: Poedit 3.1\n"
+"X-Generator: Poedit 3.3.1\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:61
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:61
+msgid "Paths"
+msgstr "Pfade"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:65
+msgid "Base URL"
+msgstr "Basis-URL"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:73
+msgid "URL for Metadata"
+msgstr "URL für Metadaten"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:81
+msgid "URL for Database"
+msgstr "URL für die Datenbank"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:88
+msgid ""
+"Warning: Only change values here if you know what you are doing. If changed "
+"by accident, you can reset the values to the defaults using the reset button "
+"below."
+msgstr ""
+"Achtung: Ändern Sie hier nur Werte, wenn Sie wissen, was Sie tun. Bei "
+"versehentlichen Änderungen können Sie die Werte auf ihre Standards "
+"zurücksetzen, wenn Sie den Reset-Button unten verwenden."
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:96
+msgid "Reset"
+msgstr "Reset"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:101
+msgid "Mapconnect Mapplication"
+msgstr "Mapconnect Mapplication"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:104
+msgid "Colours"
+msgstr "Farben"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:107
+msgid "Styling options"
+msgstr "Styling Optionen"
 
 #: blocks/tsu-mapconnect-meta-block/src/edit.js:116
 msgid "Mapconnect Metadata block"
@@ -72,6 +118,15 @@ msgstr ""
 #: blocks/tsu-mapconnect-meta-block/src/render.php:2
 msgid "Map Connect Metadata – hello from a dynamic block!"
 msgstr "Map Connect Metadaten – Hallo aus einem dynamischen Block!"
+
+#: lib/front/TSUMMapplication.php:35
+msgid ""
+"If you can read this, the map application has not been loaded correctly. Try "
+"again later. If this persists, contact the site administrator."
+msgstr ""
+"Wenn Sie das lesen können, wurde die Kartenapplikation nicht korrekt "
+"geladen. Versuchen Sie es später nochmals. Wenn das Problem bestehen bleibt, "
+"kontaktieren Sie den Administrator der Seite."
 
 #: lib/ui/TSUMMetaboxes.php:39
 msgid "MapConnect area box"
@@ -162,9 +217,6 @@ msgid ""
 msgstr ""
 "Map Connect Plugin, um bestimmte Seitendaten mit einer Frontend-"
 "Kartenanwendung über die WordPress REST API zu verbinden."
-
-#~ msgid "Mapconnect Metadata"
-#~ msgstr "Mapconnect-Metadaten"
 
 #~ msgid "Area postcodes"
 #~ msgstr "Postleitzahlen"
