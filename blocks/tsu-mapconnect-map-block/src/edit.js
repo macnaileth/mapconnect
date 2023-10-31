@@ -49,11 +49,15 @@ export default function Edit ( props ) {
                                 MC_dataUrldef,
                                 MC_baseUrlset,
                                 MC_metaUrlset,
-                                MC_dataUrlset
+                                MC_dataUrlset,
+                                MC_pluginURL
                             }
 	} = props; 
         
     const blockProps = useBlockProps();
+    
+    //get path running on
+    console.log( '*** App running @URL: ' + MC_pluginURL + ' ***');
   
     return ( 
             <div { ...blockProps }>

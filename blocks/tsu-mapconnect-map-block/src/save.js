@@ -1,4 +1,4 @@
-
+import MapBlock from './mapblock';
 
 export default function Save( props ) { 
         
@@ -10,9 +10,10 @@ export default function Save( props ) {
                                 MC_dataUrldef,
                                 MC_baseUrlset,
                                 MC_metaUrlset,
-                                MC_dataUrlset
+                                MC_dataUrlset,
+                                MC_pluginURL
                             }
 	} = props; 
-        
-        return '[mapplication base_url="' + MC_baseUrlset + '" metadata_url="' + MC_metaUrlset + '" database_url="' + MC_dataUrlset + '"]';
+                 
+        return <MapBlock settings={ { baseUrl: MC_baseUrlset, metaUrl: MC_metaUrlset, pluginURL: MC_pluginURL } } />;
 }

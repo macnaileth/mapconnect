@@ -42,7 +42,7 @@ class TSUMMapplication {
             'database_url' => $defaultParams['database_url'],
             'colors' => $defaultParams['colors']
         ), $atts );       
-        return $this->tsumMapInlineJS( $MapParams, $defaultParams ) . "\n" . '<div id="__next">' . esc_html__( 'If you can read this, the map application has not been loaded correctly. Try again later. If this persists, contact the site administrator.', 'tsu-mapconnect' ) . '</div>';
+        return $this->tsumMapInlineJS( $MapParams, $defaultParams ) . "\n";
     }
     /**
      * tsumMapEnque()

@@ -8,14 +8,14 @@
 	"main": "blocks/tsu-mapconnect-meta-block/build/index.js",
 	"scripts": {
 		"build:meta": "wp-scripts build blocks/tsu-mapconnect-meta-block/src/index.js --output-path=blocks/tsu-mapconnect-meta-block/build/",
-                "build:map": "wp-scripts build blocks/tsu-mapconnect-map-block/src/index.js --output-path=blocks/tsu-mapconnect-map-block/build/",
+		"build:map": "wp-scripts build blocks/tsu-mapconnect-map-block/src/index.js --output-path=blocks/tsu-mapconnect-map-block/build/",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start --webpack-copy-php",
-                "make-json": "wp i18n make-json languages/ --no-purge"
+		"make-json": "wp i18n make-json languages/ --no-purge"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^26.1.0"

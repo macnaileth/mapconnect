@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Fmaps","\u002Fmaps\u002Fbl\u002F[slug]","\u002Fmaps\u002Fig\u002F[slug]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
