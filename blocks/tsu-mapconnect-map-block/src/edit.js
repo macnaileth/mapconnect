@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 /**
  * Retrieves the translation of text.
  *
@@ -39,6 +40,10 @@ import './editor.scss';
  *
  * @return {WPElement} Element to render.
  */
+
+//import map data
+import mapData from "../data/mapdata.json";
+
 export default function Edit ( props ) {
         
         //get attributes
@@ -50,7 +55,8 @@ export default function Edit ( props ) {
                                 MC_baseUrlset,
                                 MC_metaUrlset,
                                 MC_dataUrlset,
-                                MC_pluginURL
+                                MC_pluginURL,
+                                MC_NextData
                             }
 	} = props; 
         
@@ -58,6 +64,16 @@ export default function Edit ( props ) {
     
     //get path running on
     console.log( '*** App running @URL: ' + MC_pluginURL + ' ***');
+    
+    //set data for output block if needed - TODO: make this dynamic in the future and add a reset button to interface
+    const mapJson = mapData;
+    
+    useEffect(() => {
+        MC_NextData === undefined || Object.keys( MC_NextData ).length === 0 && MC_NextData.constructor === Object && props.setAttributes( { MC_NextData: mapJson } ); 
+        console.log( '*** App data for frontend set! ***');
+        console.log( MC_NextData );
+    },[]);
+    
   
     return ( 
             <div { ...blockProps }>
@@ -96,10 +112,18 @@ export default function Edit ( props ) {
                             <Button 
                                 className="is-secondary" 
                                 variant="secondary" 
-                                onClick={ () => props.setAttributes({ MC_baseUrlset: "", MC_metaUrlset: "", MC_dataUrlset: "" }) }>
+                                onClick={ () => props.setAttributes({ MC_baseUrlset: "", MC_metaUrlset: "", MC_dataUrlset: "", MC_NextData: undefined }) }>
                                     { __('Reset', 'tsu-mapconnect') }
                             </Button>  
                         </PanelRow>
+                        <PanelRow>
+                            <Button 
+                                className="is-secondary" 
+                                variant="secondary" 
+                                onClick={ () => props.setAttributes({ MC_baseUrlset: "", MC_metaUrlset: "", MC_dataUrlset: "", MC_NextData: mapJson }) }>
+                                    { __('Set App Data', 'tsu-mapconnect') }
+                            </Button>  
+                        </PanelRow>                        
                     </PanelBody> 
                 </InspectorControls>
                 <h3>{ __( 'Mapconnect Mapplication', 'tsu-mapconnect' )}</h3>

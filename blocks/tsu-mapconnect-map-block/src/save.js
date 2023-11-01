@@ -11,9 +11,10 @@ export default function Save( props ) {
                                 MC_baseUrlset,
                                 MC_metaUrlset,
                                 MC_dataUrlset,
-                                MC_pluginURL
+                                MC_pluginURL,
+                                MC_NextData
                             }
 	} = props; 
                  
-        return <MapBlock settings={ { baseUrl: MC_baseUrlset, metaUrl: MC_metaUrlset, pluginURL: MC_pluginURL } } />;
+        return <MapBlock settings={ { baseUrl: MC_baseUrlset, metaUrl: MC_metaUrlset, pluginURL: MC_pluginURL, nextData: MC_NextData } } />;
 }

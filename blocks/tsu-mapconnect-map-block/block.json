@@ -23,6 +23,7 @@
                 "MC_baseUrlset": { "type": "string", "default": "" },
                 "MC_metaUrlset": { "type": "string", "default": "" },      
                 "MC_dataUrlset": { "type": "string", "default": "" }, 
-                "MC_pluginURL": { "type": "string", "default": "/dimb/wp-content/plugins/tsu-mapconnect" } 
+                "MC_pluginURL": { "type": "string", "default": "/dimb/wp-content/plugins/tsu-mapconnect" },
+                "MC_NextData": { "type": "object" }
 	}    
 }
