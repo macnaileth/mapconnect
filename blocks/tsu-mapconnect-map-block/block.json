@@ -19,11 +19,11 @@
         "attributes": {
                 "MC_baseUrldef": { "type": "string", "default": "<DEFAULT>" },
                 "MC_metaUrldef": { "type": "string", "default": "<DEFAULT>" },   
-                "MC_dataUrldef": { "type": "string", "default": "<DEFAULT>" },         
+                "MC_dataUrldef": { "type": "string", "default": "<DEFAULT>" }, 
+                "MC_pluginURLdef": { "type": "string", "default": "/dimb/wp-content/plugins/tsu-mapconnect" },        
                 "MC_baseUrlset": { "type": "string", "default": "" },
                 "MC_metaUrlset": { "type": "string", "default": "" },      
                 "MC_dataUrlset": { "type": "string", "default": "" }, 
-                "MC_pluginURL": { "type": "string", "default": "/dimb/wp-content/plugins/tsu-mapconnect" },
-                "MC_NextData": { "type": "object" }
+                "MC_pluginURL": { "type": "string", "default": "" }
 	}    
 }

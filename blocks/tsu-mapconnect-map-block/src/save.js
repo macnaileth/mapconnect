@@ -1,5 +1,3 @@
-import MapBlock from './mapblock';
-
 export default function Save( props ) { 
         
         //get attributes
@@ -8,13 +6,16 @@ export default function Save( props ) {
                                 MC_baseUrldef, 
                                 MC_metaUrldef, 
                                 MC_dataUrldef,
+                                MC_pluginURLdef,
                                 MC_baseUrlset,
                                 MC_metaUrlset,
                                 MC_dataUrlset,
                                 MC_pluginURL,
-                                MC_NextData
                             }
 	} = props; 
                  
-        return <MapBlock settings={ { baseUrl: MC_baseUrlset, metaUrl: MC_metaUrlset, pluginURL: MC_pluginURL, nextData: MC_NextData } } />;
+        return ( <div>
+                    <div id="root"></div>
+                    <script src={ ( MC_pluginURL === '' ? MC_pluginURLdef : MC_pluginURL  ) + "/app/main.js" } ></script> 
+                </div> );
 }

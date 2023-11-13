@@ -52,28 +52,18 @@ export default function Edit ( props ) {
                                 MC_baseUrldef, 
                                 MC_metaUrldef, 
                                 MC_dataUrldef,
+                                MC_pluginURLdef,
                                 MC_baseUrlset,
                                 MC_metaUrlset,
                                 MC_dataUrlset,
                                 MC_pluginURL,
-                                MC_NextData
                             }
 	} = props; 
         
     const blockProps = useBlockProps();
     
     //get path running on
-    console.log( '*** App running @URL: ' + MC_pluginURL + ' ***');
-    
-    //set data for output block if needed - TODO: make this dynamic in the future and add a reset button to interface
-    const mapJson = mapData;
-    
-    useEffect(() => {
-        MC_NextData === undefined || Object.keys( MC_NextData ).length === 0 && MC_NextData.constructor === Object && props.setAttributes( { MC_NextData: mapJson } ); 
-        console.log( '*** App data for frontend set! ***');
-        console.log( MC_NextData );
-    },[]);
-    
+    console.log( '*** App running @URL: ' + MC_pluginURL + ' ***');  
   
     return ( 
             <div { ...blockProps }>
@@ -102,7 +92,15 @@ export default function Edit ( props ) {
                                 value={ MC_dataUrlset === '' ? MC_dataUrldef : MC_dataUrlset }
                                 onChange={ (newValue) => props.setAttributes( { MC_dataUrlset: newValue } ) }
                                 />    
-                        </PanelRow>                         
+                        </PanelRow> 
+                        <PanelRow>
+                            <TextControl
+                                className = 'tsum-metablock-input'
+                                label={ __('URL string to plugin (to app dir)', 'tsu-mapconnect') }
+                                value={ MC_pluginURL === '' ? MC_pluginURLdef : MC_pluginURL }
+                                onChange={ (newValue) => props.setAttributes( { MC_pluginURL: newValue } ) }
+                                />    
+                        </PanelRow>                          
                         <PanelRow>                      
                             <p>
                                 { __('Warning: Only change values here if you know what you are doing. If changed by accident, you can reset the values to the defaults using the reset button below.', 'tsu-mapconnect') }
@@ -112,18 +110,10 @@ export default function Edit ( props ) {
                             <Button 
                                 className="is-secondary" 
                                 variant="secondary" 
-                                onClick={ () => props.setAttributes({ MC_baseUrlset: "", MC_metaUrlset: "", MC_dataUrlset: "", MC_NextData: undefined }) }>
+                                onClick={ () => props.setAttributes({ MC_baseUrlset: "", MC_metaUrlset: "", MC_dataUrlset: "", MC_pluginURL: ""  }) }>
                                     { __('Reset', 'tsu-mapconnect') }
                             </Button>  
-                        </PanelRow>
-                        <PanelRow>
-                            <Button 
-                                className="is-secondary" 
-                                variant="secondary" 
-                                onClick={ () => props.setAttributes({ MC_baseUrlset: "", MC_metaUrlset: "", MC_dataUrlset: "", MC_NextData: mapJson }) }>
-                                    { __('Set App Data', 'tsu-mapconnect') }
-                            </Button>  
-                        </PanelRow>                        
+                        </PanelRow>                       
                     </PanelBody> 
                 </InspectorControls>
                 <h3>{ __( 'Mapconnect Mapplication', 'tsu-mapconnect' )}</h3>
