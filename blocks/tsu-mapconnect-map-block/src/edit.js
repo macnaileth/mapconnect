@@ -57,6 +57,8 @@ export default function Edit ( props ) {
                                 MC_metaUrlset,
                                 MC_dataUrlset,
                                 MC_pluginURL,
+                                MC_styleDefaults,
+                                MC_styleset
                             }
 	} = props; 
         
@@ -75,6 +77,7 @@ export default function Edit ( props ) {
                                 label={ __('Base URL', 'tsu-mapconnect') }
                                 value={ MC_baseUrlset === '' ? MC_baseUrldef : MC_baseUrlset }
                                 onChange={ (newValue) => props.setAttributes( { MC_baseUrlset: newValue } ) }
+                                help={ __('Set the URL to the API delivering the geoJSON data here. Default value: <DEFAULT>.', 'tsu-mapconnect') }
                                 />    
                         </PanelRow> 
                         <PanelRow>

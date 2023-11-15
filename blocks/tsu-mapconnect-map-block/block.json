@@ -24,6 +24,18 @@
                 "MC_baseUrlset": { "type": "string", "default": "" },
                 "MC_metaUrlset": { "type": "string", "default": "" },      
                 "MC_dataUrlset": { "type": "string", "default": "" }, 
-                "MC_pluginURL": { "type": "string", "default": "" }
-	}    
+                "MC_pluginURL": { "type": "string", "default": "" },
+                "MC_styleDefaults": { "type": "object", 
+                                        "default": {                                         
+                                            "featFillRGB": "0, 94, 169",
+                                            "featFillAlpha": "0.3",
+                                            "featStrokeRGB": "0, 94, 169",
+                                            "featStrokeWidth": "2",
+                                            "featHighlightRGB": "236, 102, 8",
+                                            "headlineRGB": "80, 84, 86",
+                                            "textRGB": "52, 58, 64" 
+                                        }
+                                    },  
+                "MC_styleset": { "type": "object", "default": {} }  
+        }
 }

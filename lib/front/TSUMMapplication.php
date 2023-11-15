@@ -17,8 +17,6 @@ class TSUMMapplication {
     public function __construct() {
         //init mapplication shortcode
         add_shortcode( 'mapplication', array( $this, 'tsumMapApp' ) );
-        //load scripts for app
-        add_action( 'wp_enqueue_scripts', array( $this, 'tsumMapEnque' ) );
     }
     /**
      * tsumMapApp( $atts )
@@ -43,22 +41,6 @@ class TSUMMapplication {
             'colors' => $defaultParams['colors']
         ), $atts );       
         return $this->tsumMapInlineJS( $MapParams, $defaultParams ) . "\n";
-    }
-    /**
-     * tsumMapEnque()
-     * automatically enques all script files in the app directory of the plugin.
-     */
-    public function tsumMapEnque() {
-        
-        //enque scripts needed for application to work if map block is on page
-        if (has_block('tsum-metafields/tsu-mapconnect-map-block')) {
-            foreach( glob( TSU_MC_PLUGIN_PATH . '/app/*.js' ) as $file ) {
-                // $file contains the name and extension of the file
-                $filename = substr($file, strrpos($file, '/') + 1);
-                wp_enqueue_script( $file, TSU_MC_PLUGIN_URL . '/app/'.$filename);
-            }
-        }
-        
     }
     /**
      * tsumMapInlineJS( $params, $defaults )
