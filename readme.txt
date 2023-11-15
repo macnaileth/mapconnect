@@ -1,8 +1,8 @@
 === Map Connect Metadata and Map Application ===
 Contributors:      Marco Nagel & Kerstin Huppenbauer
 Tags:              block
-Tested up to:      6.1
-Stable tag:        0.0.2
+Tested up to:      6.3
+Stable tag:        0.0.3
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,7 +19,7 @@ API ROUTES:
 
 /tsu-mapconnect/v1/area/activity/<activity> => retrieves an area by activity
 
-SHORTCODE:
+SHORTCODE (Not implemented at the moment - use the map block in Gutenberg):
 
 If WP Classic is used, the map app can be placed using the WordPress Shortcode API. Use the following code:
 
@@ -39,6 +39,7 @@ Advanced users who would like to build their stuff themsselves also refer to Ker
 none ATM
 
 == Changelog ==
+15.11.2023 - Did a lot of updating, added map frontend element, updated edit fpr Gutenberg
 08.06.2023 - Added a skeleton block for the future map application to be placed on WP pages and posts. 
 11.04.2023 - finished all basic sanitization and validation stuff. Supports now Gutenberg Block Editor aswell as Classic Editor plugin for data input: Metabox and React Block provided.
 13.04.2023 - Added functionality to retrieve an area by entering a postcode
@@ -46,6 +47,8 @@ none ATM
 18.04.2023 - Added OpenPLZ API integration and some status messages
 17.06.2023 - Added configuration pane to Gutenberg react block and shortcode for app placement
 
+= 0.0.3 =
+* Map added, connected to khuppenbauers api found here (i hope :-)): https://github.com/khuppenbauer/fastapi-dimb
 
 = 0.0.2 =
 * Release
