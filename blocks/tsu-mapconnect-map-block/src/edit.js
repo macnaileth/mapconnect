@@ -21,7 +21,8 @@ import { TextControl,
          Panel, 
          PanelBody, 
          PanelRow,
-         Button } from '@wordpress/components';
+         Button, 
+         ColorPalette } from '@wordpress/components';
 import { Fragment } from "@wordpress/element"; 
 
 /**
@@ -64,8 +65,22 @@ export default function Edit ( props ) {
         
     const blockProps = useBlockProps();
     
+    //define default color palette
+    const defaultColors = [
+        { name: 'DIMB Blau', color: 'rgb(0, 94, 169)' },
+        { name: 'DIMB Dunkelblau', color: 'rgb(16, 45, 105)' },
+        { name: 'DIMB Hellblau', color: 'rgb(59, 169, 210)' },
+        { name: 'DIMB Orange', color: 'rgb(236, 102, 8)' },
+        { name: 'DIMB Purple', color: 'rgb(149, 27, 129)' },
+        { name: 'DIMB Dunkelgrau', color: 'rgb(80, 85, 85)' },
+        { name: 'DIMB Grau', color: 'rgb(157, 169, 177)' },
+        { name: 'DIMB Schwarz', color: 'rgb(0, 0, 100)' },
+        { name: 'DIMB Weiß', color: 'rgb(0, 0, 0)' },
+    ];
+    
     //get path running on
     console.log( '*** App running @URL: ' + MC_pluginURL + ' ***');  
+    console.log( 'styles defaults: ', MC_styleDefaults );
   
     return ( 
             <div { ...blockProps }>
@@ -123,6 +138,16 @@ export default function Edit ( props ) {
                 <div className="tsum-metablock-container">
                     <div className="tsum-metablock-left">
                         <h4>{ __( 'Colours', 'tsu-mapconnect' )}</h4>
+                        <div className="tsum-col-pal">
+                            <span className="tsum-head-pal">{ __('Map feature fill', 'tsu-mapconnect')  }</span>
+                            <ColorPalette
+                                colors={ defaultColors }
+                                value={ MC_styleset.featFillRGB === undefined || MC_styleset.featFillRGB === '' ? 
+                                            'rgb(' + MC_styleDefaults.featFillRGB +  ')' : 
+                                            'rgb(' + MC_styleset.featFillRGB + ')' }
+                                onChange={ ( newValue ) => props.setAttributes( { MC_styleset: newValue } ) }
+                            />  
+                        </div>                     
                     </div>
                     <div className="tsum-metablock-right">
                         <h4>{ __( 'Styling options', 'tsu-mapconnect' )}</h4>                    
