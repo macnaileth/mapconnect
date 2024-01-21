@@ -7,6 +7,7 @@ License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
 Map Connect plugin with metadata and map application block for WordPress using different APIs including WordPress REST API
+This is the DIMB-Version: up to special demand, it doesn't use postcodes and postcode api because users should be able to modify this in WP.
 
 == Description ==
 
@@ -39,6 +40,7 @@ Advanced users who would like to build their stuff themsselves also refer to Ker
 none ATM
 
 == Changelog ==
+21.01.2023 - created this branch. Master/Origin contains all the stuff. This is simplified.
 15.11.2023 - Did a lot of updating, added map frontend element, updated edit fpr Gutenberg
 08.06.2023 - Added a skeleton block for the future map application to be placed on WP pages and posts. 
 11.04.2023 - finished all basic sanitization and validation stuff. Supports now Gutenberg Block Editor aswell as Classic Editor plugin for data input: Metabox and React Block provided.
