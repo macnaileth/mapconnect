@@ -16,6 +16,7 @@ class TSUMCCore {
         require_once TSU_MC_PLUGIN_PATH . '/lib/ui/TSUMMetaboxes.php';
         require_once TSU_MC_PLUGIN_PATH . '/lib/api/TSUMAPIOutput.php';
         require_once TSU_MC_PLUGIN_PATH . '/lib/front/TSUMMapplication.php';
+        require_once TSU_MC_PLUGIN_PATH . '/lib/ui/TSUMSettings.php';
         
         //register metafields for Guteberg blocks
         add_action( 'init', array( $this, 'tsumRegisterMetafields' ) );
@@ -23,6 +24,8 @@ class TSUMCCore {
         add_action( 'init', array( $this, 'tsumRegisterBlocks' ) );
         //create metabox for classic editor
         $tsumMBXPage = new ui\TSUMMetaboxes();
+        //create settings page
+        $tsumSettingsPage = new ui\TSUMSettings();
         //start broadcasting data to api endpoints       
         $tsumAPI = new api\TSUMAPIOutput();
         //add shortcodes

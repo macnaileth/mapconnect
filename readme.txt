@@ -1,13 +1,16 @@
 === Map Connect Metadata and Map Application ===
 Contributors:      Marco Nagel & Kerstin Huppenbauer
 Tags:              block
-Tested up to:      6.3
-Stable tag:        0.0.3
+Tested up to:      6.4
+Stable tag:        0.0.9
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
 Map Connect plugin with metadata and map application block for WordPress using different APIs including WordPress REST API
 This is the DIMB-Version: up to special demand, it doesn't use postcodes and postcode api because users should be able to modify this in WP.
+
+UPDATE: Well. I want to do things right and not too dirty so this version will feature a settings page where you can turn the use of postcode data on or off.
+Will probably be merged back into main branch ;-)
 
 == Description ==
 
@@ -48,6 +51,10 @@ none ATM
 16.04.2023 - Added route for getting areas by activites, added some html status codes
 18.04.2023 - Added OpenPLZ API integration and some status messages
 17.06.2023 - Added configuration pane to Gutenberg react block and shortcode for app placement
+04.02.2024 - Added a settings page - work in progress
+
+= 0.0.9 =
+* Forked the thing. About to add working settings page
 
 = 0.0.3 =
 * Map added, connected to khuppenbauers api found here (i hope :-)): https://github.com/khuppenbauer/fastapi-dimb

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2023-06-16 15:09+0200\n"
+"POT-Creation-Date: 2024-02-04 11:13+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -20,31 +20,41 @@ msgstr ""
 "esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
 "_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:61
+#: blocks/tsu-mapconnect-map-block/src/edit.js:88
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:61
+#: blocks/tsu-mapconnect-map-block/src/edit.js:88
 msgid "Paths"
 msgstr "Pfade"
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:65
+#: blocks/tsu-mapconnect-map-block/src/edit.js:92
 msgid "Base URL"
 msgstr "Basis-URL"
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:73
+#: blocks/tsu-mapconnect-map-block/src/edit.js:95
+msgid ""
+"Set the URL to the API delivering the geoJSON data here. Default value: "
+"<DEFAULT>."
+msgstr "Die URL der API für GEOJSON einstellen. Standard: <DEFAULT>"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:101
 msgid "URL for Metadata"
 msgstr "URL für Metadaten"
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:81
+#: blocks/tsu-mapconnect-map-block/src/edit.js:109
 msgid "URL for Database"
 msgstr "URL für die Datenbank"
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:88
+#: blocks/tsu-mapconnect-map-block/src/edit.js:117
+msgid "URL string to plugin (to app dir)"
+msgstr "URL-Zeichenkette zum App-Verzeichnis des Plugins"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:124
 msgid ""
 "Warning: Only change values here if you know what you are doing. If changed "
 "by accident, you can reset the values to the defaults using the reset button "
@@ -54,19 +64,23 @@ msgstr ""
 "versehentlichen Änderungen können Sie die Werte auf ihre Standards "
 "zurücksetzen, wenn Sie den Reset-Button unten verwenden."
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:96
+#: blocks/tsu-mapconnect-map-block/src/edit.js:132
 msgid "Reset"
 msgstr "Reset"
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:101
+#: blocks/tsu-mapconnect-map-block/src/edit.js:137
 msgid "Mapconnect Mapplication"
 msgstr "Mapconnect Mapplication"
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:104
+#: blocks/tsu-mapconnect-map-block/src/edit.js:140
 msgid "Colours"
 msgstr "Farben"
 
-#: blocks/tsu-mapconnect-map-block/src/edit.js:107
+#: blocks/tsu-mapconnect-map-block/src/edit.js:142
+msgid "Map feature fill"
+msgstr "Füllfarbe der Kartenfeatures"
+
+#: blocks/tsu-mapconnect-map-block/src/edit.js:153
 msgid "Styling options"
 msgstr "Styling Optionen"
 
@@ -119,15 +133,6 @@ msgstr ""
 msgid "Map Connect Metadata – hello from a dynamic block!"
 msgstr "Map Connect Metadaten – Hallo aus einem dynamischen Block!"
 
-#: lib/front/TSUMMapplication.php:35
-msgid ""
-"If you can read this, the map application has not been loaded correctly. Try "
-"again later. If this persists, contact the site administrator."
-msgstr ""
-"Wenn Sie das lesen können, wurde die Kartenapplikation nicht korrekt "
-"geladen. Versuchen Sie es später nochmals. Wenn das Problem bestehen bleibt, "
-"kontaktieren Sie den Administrator der Seite."
-
 #: lib/ui/TSUMMetaboxes.php:39
 msgid "MapConnect area box"
 msgstr "MapConnect Gebietsdatenbox"
@@ -171,6 +176,14 @@ msgstr ""
 "für WordPress. Wir empfehlen dringend, stattdessen Gutenberg zu verwenden, "
 "da Classic Editor veraltet ist und wir ihn in naher Zukunft nicht mehr "
 "unterstützen werden."
+
+#: lib/ui/TSUMSettings.php:25 lib/ui/TSUMSettings.php:35
+msgid "MapConnect Settings"
+msgstr "Map Connect Einstellungen"
+
+#: lib/ui/TSUMSettings.php:26
+msgid "MapConnect Settings Page"
+msgstr "MapConnect Einstellungsseite"
 
 #: lib/util/TSUMCleanUp.php:30
 msgid ""
@@ -217,6 +230,14 @@ msgid ""
 msgstr ""
 "Map Connect Plugin, um bestimmte Seitendaten mit einer Frontend-"
 "Kartenanwendung über die WordPress REST API zu verbinden."
+
+#~ msgid ""
+#~ "If you can read this, the map application has not been loaded correctly. "
+#~ "Try again later. If this persists, contact the site administrator."
+#~ msgstr ""
+#~ "Wenn Sie das lesen können, wurde die Kartenapplikation nicht korrekt "
+#~ "geladen. Versuchen Sie es später nochmals. Wenn das Problem bestehen "
+#~ "bleibt, kontaktieren Sie den Administrator der Seite."
 
 #~ msgid "Area postcodes"
 #~ msgstr "Postleitzahlen"

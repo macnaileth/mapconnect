@@ -2,7 +2,7 @@
 /*
 Plugin Name: Map Connect
 Description: Map connect plugin to connect specific page data with frontend map application using the wordpress REST api.
-Version: 0.0.1
+Version: 0.0.9
 Author: Marco Nagel
 Author URI: https://tsu-nami.de/
 Text Domain: tsu-mapconnect
