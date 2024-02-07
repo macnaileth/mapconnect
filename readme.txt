@@ -52,6 +52,7 @@ none ATM
 18.04.2023 - Added OpenPLZ API integration and some status messages
 17.06.2023 - Added configuration pane to Gutenberg react block and shortcode for app placement
 04.02.2024 - Added a settings page - work in progress
+07.02.2024 - Updated js dependencies and rebuilt blocks
 
 = 0.0.9 =
 * Forked the thing. About to add working settings page
