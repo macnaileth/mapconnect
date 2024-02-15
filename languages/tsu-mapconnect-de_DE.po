@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2024-02-04 11:13+0100\n"
+"POT-Creation-Date: 2024-02-15 17:42+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -177,13 +177,34 @@ msgstr ""
 "da Classic Editor veraltet ist und wir ihn in naher Zukunft nicht mehr "
 "unterstützen werden."
 
-#: lib/ui/TSUMSettings.php:25 lib/ui/TSUMSettings.php:35
+#: lib/ui/TSUMSettings.php:26 lib/ui/TSUMSettings.php:36
 msgid "MapConnect Settings"
 msgstr "Map Connect Einstellungen"
 
-#: lib/ui/TSUMSettings.php:26
-msgid "MapConnect Settings Page"
-msgstr "MapConnect Einstellungsseite"
+#: lib/ui/TSUMSettings.php:27
+msgid "MapConnect"
+msgstr "Map Connect"
+
+#: lib/ui/TSUMSettings.php:41
+msgid "Save"
+msgstr "Speichern"
+
+#: lib/ui/TSUMSettings.php:47
+msgid "General Settings"
+msgstr "Allgemeine Einstellungen"
+
+#: lib/ui/TSUMSettings.php:49
+msgid "enable postcode field in Metabox"
+msgstr "PLZ-Feld in Metabox erlauben"
+
+#: lib/ui/TSUMSettings.php:66
+msgid ""
+"Here you can do general settings for the map connect plugin, like enabling/"
+"disabling of postcode input per page."
+msgstr ""
+"Hier können allgemeine Einstellungen für das Map Connect Plugin getätigt "
+"werden, beispielsweise das ein-/abschalten der Eingabe von Postleitzahlen "
+"auf den Seiten."
 
 #: lib/util/TSUMCleanUp.php:30
 msgid ""
@@ -230,6 +251,9 @@ msgid ""
 msgstr ""
 "Map Connect Plugin, um bestimmte Seitendaten mit einer Frontend-"
 "Kartenanwendung über die WordPress REST API zu verbinden."
+
+#~ msgid "MapConnect Settings Page"
+#~ msgstr "MapConnect Einstellungsseite"
 
 #~ msgid ""
 #~ "If you can read this, the map application has not been loaded correctly. "
