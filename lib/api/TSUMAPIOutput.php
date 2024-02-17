@@ -11,6 +11,8 @@ namespace lib\api;
 defined( 'ABSPATH' ) or die( 'Direct access not allowed!' );
 
 class TSUMAPIOutput {
+    
+    private $settings = [];
 
     public function __construct() { 
         //load up helpers lib
@@ -18,6 +20,8 @@ class TSUMAPIOutput {
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMMsgHandler.php';
         //init routes
         add_action( 'rest_api_init', array( $this, 'tsumRegisterRoutes' ) );
+        //load plugin settings
+        $this->settings = get_option( 'tsumMCOptions' );
     }
     /**
      * tsumRegisterRoutes() 
@@ -145,28 +149,40 @@ class TSUMAPIOutput {
      */
     public function tsumAreaByPCode( $data ) {
         
-        //get the pages and return the needed params in API
-        $pages = get_pages();
-        $reqPostCode = $data['postcode'];
-        
-        $response = [ 'requested-pc' => $reqPostCode, 'location' => [], 'match' => [] ];
-        
-        array_push($response['location'], $this->tsumGetLocation( $reqPostCode ) );
-        
-        foreach($pages as $page) {
-            //get data and check if relevant stuff exists
-            $pAreaName = get_post_meta( $page->ID, '_meta_fields_tsum_areaname', true );
-            if (!empty($pAreaName)) {
-                //check for if we match
-                $pAreaCodes = get_post_meta( $page->ID, '_meta_fields_tsum_areapcs', true );
-                
-                if (strpos($pAreaCodes, $reqPostCode) !== false) {
-                    $area = $this->tsumArea( $page->ID, $pAreaName ); 
-                    array_push($response['match'], $area);
-                }                 
-            }
-        }       
-        return empty( $response['match'] ) ? $response = \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($reqPostCode, 404) : $response;
+        //check if we should return postal codes at all
+        if ( $this->tsumGetOptionByKey( "tsum_general_setting_pc_output", '1' ) === true ) {
+
+            //get the pages and return the needed params in API
+            $pages = get_pages();
+            $reqPostCode = $data['postcode'];
+
+            $response = [ 
+                'response' => \lib\util\TSUMMsgHandler::tsumAPIReturnMessage( $data['postcode'] ), 
+                'requested-pc' => $reqPostCode, 
+                'location' => $this->tsumGetLocation( $reqPostCode ), 
+                'match' => [] 
+                ];
+
+            foreach($pages as $page) {
+                //get data and check if relevant stuff exists
+                $pAreaName = get_post_meta( $page->ID, '_meta_fields_tsum_areaname', true );
+                if (!empty($pAreaName)) {
+                    //check for if we match
+                    $pAreaCodes = get_post_meta( $page->ID, '_meta_fields_tsum_areapcs', true );
+
+                    if (strpos($pAreaCodes, $reqPostCode) !== false) {
+                        $area = $this->tsumArea( $page->ID, $pAreaName ); 
+                        array_push( $response['match'], $area );
+                    }                 
+                }
+            }       
+            return empty( $response['match'] ) ? array_push($response['response'], \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($reqPostCode, 404) ) : $response;
+            
+        } else {
+            $response['response'] = \lib\util\TSUMMsgHandler::tsumAPIReturnMessage( $data['postcode'] );
+            $response['match'] = [ -1, esc_html__( 'Postcode output has been disabled in settings. Retrieving matching area not possible.', 'tsu-mapconnect' ) ];
+            return $response;
+        }
     }  
     public function tsumAreaByActivity ( $data ) {
         //load string helpers here
@@ -211,7 +227,7 @@ class TSUMAPIOutput {
      * @return array of area data
      */
     private function tsumArea( $id, $name ) {
-        
+
                 //handle logo conversion to usable string
                 $logoRAW = get_post_meta( $id, '_meta_fields_tsum_arealogo', true );
                 $logoStr = '';
@@ -232,7 +248,9 @@ class TSUMAPIOutput {
                 
                 $area = [ 
                             'name' => $name,
-                            'postcodes' => explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus( get_post_meta( $id, '_meta_fields_tsum_areapcs', true ) ) ),
+                            'postcodes' => $this->tsumGetOptionByKey( "tsum_general_setting_pc_output", '1' ) === true ? 
+                                                explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus( get_post_meta( $id, '_meta_fields_tsum_areapcs', true ) ) ) :
+                                                [ -1, esc_html__( 'Postcode output has been disabled in settings.', 'tsu-mapconnect' ) ],
                             'logo-url' => $logoStr,
                             'site-url' => get_post_meta( $id, '_meta_fields_tsum_arealink', true ) /* TODO: Validate Link! */,
                             'contact' => get_post_meta( $id, '_meta_fields_tsum_areacontact', true ),
@@ -260,14 +278,37 @@ class TSUMAPIOutput {
         if (is_numeric( $string )) {
             //by postcode
             $json = file_get_contents( $reqURL );
-            $location = [ 'source' => 'https://openplzapi.org/', 'request' => $reqURL ];
-            $location['data'] = json_decode($json);
+            $decoded = json_decode($json);
+            
+            $location = [ 
+                'source' => 'https://openplzapi.org/', 
+                'request' => $reqURL, 
+                'data' => array_key_exists( 0, $decoded ) ? $decoded[0] : $decoded
+                ];
             
             return $location;
         } else {
             //TODO: Allow string search for locations later
             return [ 'TODO' => 'Service under construction.' ];
         }
+        
+    }
+    /**
+     * tsumGetOptionByKey
+     * private function to check if key exists in options array 
+     * and has a certain value
+     * 
+     * 
+     * @param string $key
+     * @return boolean true / false
+     */
+    private function tsumGetOptionByKey ( $key, $value = '1' ) { 
+        
+        $setting = is_array( $this->settings ) 
+                && array_key_exists( $key, $this->settings ) 
+                && $this->settings[ $key ] == $value ? true : false;
+        
+        return $setting;
         
     }
 }

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2024-02-15 17:42+0100\n"
+"POT-Creation-Date: 2024-02-17 16:24+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -133,6 +133,18 @@ msgstr ""
 msgid "Map Connect Metadata – hello from a dynamic block!"
 msgstr "Map Connect Metadaten – Hallo aus einem dynamischen Block!"
 
+#: lib/api/TSUMAPIOutput.php:180
+msgid ""
+"Postcode output has been disabled in settings. Retrieving matching area not "
+"possible."
+msgstr ""
+"Die Ausgabe von Postleitzahlen wurde in den Einstellungen deaktiviert. "
+"Übereinstimmende Gebiete können nicht zurückgegeben werden."
+
+#: lib/api/TSUMAPIOutput.php:250
+msgid "Postcode output has been disabled in settings."
+msgstr "Die Ausgabe von Postleitzahlen wurde in den Einstellungen deaktiviert."
+
 #: lib/ui/TSUMMetaboxes.php:39
 msgid "MapConnect area box"
 msgstr "MapConnect Gebietsdatenbox"
@@ -177,7 +189,7 @@ msgstr ""
 "da Classic Editor veraltet ist und wir ihn in naher Zukunft nicht mehr "
 "unterstützen werden."
 
-#: lib/ui/TSUMSettings.php:26 lib/ui/TSUMSettings.php:36
+#: lib/ui/TSUMSettings.php:26 lib/ui/TSUMSettings.php:37
 msgid "MapConnect Settings"
 msgstr "Map Connect Einstellungen"
 
@@ -185,19 +197,19 @@ msgstr "Map Connect Einstellungen"
 msgid "MapConnect"
 msgstr "Map Connect"
 
-#: lib/ui/TSUMSettings.php:41
+#: lib/ui/TSUMSettings.php:42
 msgid "Save"
 msgstr "Speichern"
 
-#: lib/ui/TSUMSettings.php:47
+#: lib/ui/TSUMSettings.php:49
 msgid "General Settings"
 msgstr "Allgemeine Einstellungen"
 
-#: lib/ui/TSUMSettings.php:49
+#: lib/ui/TSUMSettings.php:51
 msgid "enable postcode field in Metabox"
 msgstr "PLZ-Feld in Metabox erlauben"
 
-#: lib/ui/TSUMSettings.php:66
+#: lib/ui/TSUMSettings.php:68
 msgid ""
 "Here you can do general settings for the map connect plugin, like enabling/"
 "disabling of postcode input per page."

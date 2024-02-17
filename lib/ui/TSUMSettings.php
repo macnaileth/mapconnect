@@ -33,13 +33,15 @@ class TSUMSettings {
     
     public function tsumRenderSettingsPage() {
         ?>
-        <h2><?php echo esc_html__( 'MapConnect Settings', 'tsu-mapconnect' ); ?></h2>
+        <div class="wrap">
+            <h1><?php echo esc_html__( 'MapConnect Settings', 'tsu-mapconnect' ); ?></h1>
             <form action="options.php" method="post">
                 <?php 
                 settings_fields( 'tsumMCOptions' );
                 do_settings_sections( 'tsu-mapconnect' ); ?>
                 <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e( 'Save' ); ?>" />
             </form>
+        </div>
         <?php
     }  
     public function tsumRegisterSettings() {

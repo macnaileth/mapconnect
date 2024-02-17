@@ -19,7 +19,7 @@ API ROUTES:
 
 /tsu-mapconnect/v1/area/aname/<areaname> => returns a single area by name, use '_' for whitespaces, ae/ue/oe for german Umlaute
 
-/tsu-mapconnect/v1/area/pcode/<Postcode> => Retrieves an area by an included postcode
+/tsu-mapconnect/v1/area/pcode/<Postcode> => Retrieves an area by an included postcode (If postcode-handling is not deactivated)
 
 /tsu-mapconnect/v1/area/activity/<activity> => retrieves an area by activity
 
