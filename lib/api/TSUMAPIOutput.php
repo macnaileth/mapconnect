@@ -18,6 +18,7 @@ class TSUMAPIOutput {
         //load up helpers lib
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMCleanUp.php';
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMMsgHandler.php';
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
         //init routes
         add_action( 'rest_api_init', array( $this, 'tsumRegisterRoutes' ) );
         //load plugin settings
@@ -89,7 +90,7 @@ class TSUMAPIOutput {
      */
     public function tsumAreaName( $data ) { 
         //load string helpers here
-        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMStringHelpers.php';
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
         
         //check if existing
         $pages = get_pages();
@@ -97,7 +98,7 @@ class TSUMAPIOutput {
         
         foreach($pages as $page) {
             //get data and check if relevant stuff exists
-            $reqName = \lib\util\TSUMStringHelpers::tsumConvertToUmlaute($data['areaname'], true);
+            $reqName = \lib\util\TSUMHelpers::tsumConvertToUmlaute($data['areaname'], true);
             
             $pAreaName = get_post_meta( $page->ID, '_meta_fields_tsum_areaname', true );
             if ( !empty($pAreaName) && $pAreaName == $reqName ) {
@@ -149,8 +150,8 @@ class TSUMAPIOutput {
      */
     public function tsumAreaByPCode( $data ) {
         
-        //check if we should return postal codes at all
-        if ( $this->tsumGetOptionByKey( "tsum_general_setting_pc_output", '1' ) === true ) {
+        //check if we should return postal codes at all TODO: USE STATIC HELPER
+        if ( \lib\util\TSUMHelpers::tsumGetOptionByKey( $this->settings, "tsum_general_setting_pc_output", '1' ) === true ) {
 
             //get the pages and return the needed params in API
             $pages = get_pages();
@@ -186,7 +187,7 @@ class TSUMAPIOutput {
     }  
     public function tsumAreaByActivity ( $data ) {
         //load string helpers here
-        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMStringHelpers.php';
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
         
         //check if existing
         $pages = get_pages();
@@ -197,7 +198,7 @@ class TSUMAPIOutput {
         
         foreach($pages as $page) {
             //get data and check if relevant stuff exists
-            $activity = \lib\util\TSUMStringHelpers::tsumConvertToUmlaute($data['activity'], true);
+            $activity = \lib\util\TSUMHelpers::tsumConvertToUmlaute($data['activity'], true);
             
             $pAreaName = get_post_meta( $page->ID, '_meta_fields_tsum_areaname', true );
             if ( !empty($pAreaName) &&  strlen( $data['activity'] ) > 2 ) {
@@ -245,10 +246,10 @@ class TSUMAPIOutput {
                                 'url' => esc_url( get_page_link( $id ) ),
                                 'api' => get_site_url() . '/wp-json/wp/v2/pages/' . $id            
                             ];
-                
+                //TODO: USE STATIC HELPER
                 $area = [ 
                             'name' => $name,
-                            'postcodes' => $this->tsumGetOptionByKey( "tsum_general_setting_pc_output", '1' ) === true ? 
+                            'postcodes' => \lib\util\TSUMHelpers::tsumGetOptionByKey( $this->settings, "tsum_general_setting_pc_output", '1' ) === true ? 
                                                 explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus( get_post_meta( $id, '_meta_fields_tsum_areapcs', true ) ) ) :
                                                 [ -1, esc_html__( 'Postcode output has been disabled in settings.', 'tsu-mapconnect' ) ],
                             'logo-url' => $logoStr,
@@ -291,24 +292,6 @@ class TSUMAPIOutput {
             //TODO: Allow string search for locations later
             return [ 'TODO' => 'Service under construction.' ];
         }
-        
-    }
-    /**
-     * tsumGetOptionByKey
-     * private function to check if key exists in options array 
-     * and has a certain value
-     * 
-     * 
-     * @param string $key
-     * @return boolean true / false
-     */
-    private function tsumGetOptionByKey ( $key, $value = '1' ) { 
-        
-        $setting = is_array( $this->settings ) 
-                && array_key_exists( $key, $this->settings ) 
-                && $this->settings[ $key ] == $value ? true : false;
-        
-        return $setting;
         
     }
 }

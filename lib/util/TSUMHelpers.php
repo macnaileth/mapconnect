@@ -2,7 +2,7 @@
 namespace lib\util;
 
 /**
- * Description of TSUMStringHelpers
+ * Description of TSUMHelpers
  * 
  * Static helpers for string operations
  *
@@ -10,7 +10,7 @@ namespace lib\util;
  */
 defined( 'ABSPATH' ) or die( 'Direct access not allowed!' );
 
-class TSUMStringHelpers {
+class TSUMHelpers {
     
     /**
      * tsumConvertToUmlaute( $string )
@@ -27,4 +27,23 @@ class TSUMStringHelpers {
         return str_replace( [ 'ae', 'Ae', 'oe', 'Oe', 'ue', 'Ue' ], [ 'ä', 'Ä', 'ö', 'Ö', 'ü', 'Ü' ], $prepStr );
         
     }
+    
+    /**
+     * tsumGetOptionByKey
+     * private function to check if key exists in options array 
+     * and has a certain value
+     * 
+     * @param array $array
+     * @param string $key
+     * @return boolean true / false
+     */
+    public static function tsumGetOptionByKey ( $array, $key, $value = '1' ) { 
+        
+        $setting = is_array( $array ) 
+                && array_key_exists( $key, $array ) 
+                && $array[ $key ] == $value ? true : false;
+        
+        return $setting;
+        
+    }    
 }

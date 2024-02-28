@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) or die( 'Direct access not allowed!' );
 class TSUMMetaboxes {
     
     private $boxType;
+    private $settings = [];    
     
     public function __construct( $box = 'PCAREA' ) {
         $this->boxType = $box;
@@ -24,6 +25,8 @@ class TSUMMetaboxes {
         add_action( 'add_meta_boxes', array( $this, 'tsumMetabox' ) ); //metabox
         add_action( 'save_post', array( $this, 'tsumMetaboxSave' ) ); //save_post
         
+        //load plugin settings
+        $this->settings = get_option( 'tsumMCOptions' );               
     }
     /**
      * tsumMetabox()
