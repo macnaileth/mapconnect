@@ -19,6 +19,9 @@ class TSUMMetaboxes {
     private $settings = [];    
     
     public function __construct( $box = 'PCAREA' ) {
+        //require libs
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
+        
         $this->boxType = $box;
         
         //add action here
@@ -75,12 +78,14 @@ class TSUMMetaboxes {
                             <input type="text" id="meta_fields_tsum_areaname" name="meta_fields_tsum_areaname" value="<?php echo esc_attr( $area["name"] ); ?>" />
                         </td>
                     </tr>
-                    <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Area postcodes (comma-separated)', 'tsu-mapconnect' ); ?></th>
-                        <td>
-                            <input type="text" id="meta_fields_tsum_areapcs" name="meta_fields_tsum_areapcs" value="<?php echo esc_attr( $area["postcode"]  ); ?>" />
-                        </td>
-                    </tr>
+                    <?php if ( \lib\util\TSUMHelpers::tsumGetOptionByKey( $this->settings, "tsum_general_setting_pc_output", '1' ) === true ): ?>
+                        <tr valign="top">
+                            <th scope="row"><?php esc_html_e( 'Area postcodes (comma-separated)', 'tsu-mapconnect' ); ?></th>
+                            <td>
+                                <input type="text" id="meta_fields_tsum_areapcs" name="meta_fields_tsum_areapcs" value="<?php echo esc_attr( $area["postcode"]  ); ?>" />
+                            </td>
+                        </tr>
+                    <?php endif ?>
                     <tr valign="top">
                         <th scope="row"><?php esc_html_e( 'Logo or other image', 'tsu-mapconnect' ); ?></th>
                         <td>
