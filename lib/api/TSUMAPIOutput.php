@@ -15,10 +15,13 @@ class TSUMAPIOutput {
     private $settings = [];
 
     public function __construct() { 
-        //load up helpers lib
+        //load up helpers, message handler and clean up lib
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMCleanUp.php';
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMMsgHandler.php';
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
+        //load data handler lib
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMDataHandler.php';
+        
         //init routes
         add_action( 'rest_api_init', array( $this, 'tsumRegisterRoutes' ) );
         //load plugin settings
@@ -34,7 +37,7 @@ class TSUMAPIOutput {
         $base = 'area';
         
         //area name route
-        register_rest_route( $namespace . '/' . $base, '/aname/(?P<areaname>[\w_-]+)', array(
+        register_rest_route( $namespace . '/' . $base, '/aname/(?P<areaname>([\w\/\+\-.:_]|%20)+)', array(
           'methods' => 'GET',
           'callback' => array( $this, 'tsumAreaName' ),
           'permission_callback' => '__return_true',  
@@ -228,39 +231,42 @@ class TSUMAPIOutput {
      * @return array of area data
      */
     private function tsumArea( $id, $name ) {
+        
+        //init data handler
+        $tsumDataHandler = new \lib\util\TSUMDataHandler( isset( $this->settings['tsum_general_setting_db_table'] ) ? $this->settings['tsum_general_setting_db_table'] : '' ); 
 
-                //handle logo conversion to usable string
-                $logoRAW = get_post_meta( $id, '_meta_fields_tsum_arealogo', true );
-                $logoStr = '';
-                if (!empty($logoRAW)){
-                    $logoStr = is_numeric( $logoRAW ) ? [ 
-                                                            'full' => wp_get_attachment_image_src( $logoRAW, 'full' )[0],
-                                                            'medium' => wp_get_attachment_image_src( $logoRAW, 'medium' )[0],
-                                                            'thumb' => wp_get_attachment_image_src( $logoRAW, 'thumbnail' )[0]
-                                                        ] : $logoRAW;
-                }
-                //create pagedata array
-                $pageData = [
-                                'id' => $id,
-                                'title' => esc_attr( get_the_title( $id ) ),
-                                'url' => esc_url( get_page_link( $id ) ),
-                                'api' => get_site_url() . '/wp-json/wp/v2/pages/' . $id            
-                            ];
-                //TODO: USE STATIC HELPER
-                $area = [ 
-                            'name' => $name,
-                            'postcodes' => \lib\util\TSUMHelpers::tsumGetOptionByKey( $this->settings, "tsum_general_setting_pc_output", '1' ) === true ? 
-                                                explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus( get_post_meta( $id, '_meta_fields_tsum_areapcs', true ) ) ) :
-                                                [ -1, esc_html__( 'Postcode output has been disabled in settings.', 'tsu-mapconnect' ) ],
-                            'logo-url' => $logoStr,
-                            'site-url' => get_post_meta( $id, '_meta_fields_tsum_arealink', true ) /* TODO: Validate Link! */,
-                            'contact' => get_post_meta( $id, '_meta_fields_tsum_areacontact', true ),
-                            'activities' => explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus( get_post_meta( $id, '_meta_fields_tsum_areaactivities', true ) ) ),
-                            'description' => get_post_meta( $id, '_meta_fields_tsum_areadesc', true ),
-                            'socialmedia' => get_post_meta( $id, '_meta_fields_tsum_areasocmedia', true ) /* TODO: Find a format */,
-                            'page-ref' => $pageData
-                        ];
-                
+        //handle logo conversion to usable string
+        $logoRAW = get_post_meta($id, '_meta_fields_tsum_arealogo', true);
+        $logoStr = '';
+        if (!empty($logoRAW)) {
+            $logoStr = is_numeric($logoRAW) ? [
+                'full' => wp_get_attachment_image_src($logoRAW, 'full')[0],
+                'medium' => wp_get_attachment_image_src($logoRAW, 'medium')[0],
+                'thumb' => wp_get_attachment_image_src($logoRAW, 'thumbnail')[0]
+                    ] : $logoRAW;
+        }
+        //create pagedata array
+        $pageData = [
+            'id' => $id,
+            'title' => esc_attr(get_the_title($id)),
+            'url' => esc_url(get_page_link($id)),
+            'api' => get_site_url() . '/wp-json/wp/v2/pages/' . $id
+        ];
+        //TODO: USE STATIC HELPER
+        $area = [
+            'name' => $name,
+            'postcodes' => \lib\util\TSUMHelpers::tsumGetOptionByKey($this->settings, "tsum_general_setting_pc_output", '1') === true ?
+            explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus(get_post_meta($id, '_meta_fields_tsum_areapcs', true))) :
+            $tsumDataHandler->tsumRetrievePostCodesByAname( $name ),
+            'logo-url' => $logoStr,
+            'site-url' => get_post_meta($id, '_meta_fields_tsum_arealink', true) /* TODO: Validate Link! */,
+            'contact' => get_post_meta($id, '_meta_fields_tsum_areacontact', true),
+            'activities' => explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus(get_post_meta($id, '_meta_fields_tsum_areaactivities', true))),
+            'description' => get_post_meta($id, '_meta_fields_tsum_areadesc', true),
+            'socialmedia' => get_post_meta($id, '_meta_fields_tsum_areasocmedia', true) /* TODO: Find a format */,
+            'page-ref' => $pageData
+        ];
+
         return $area;
     }
     /**
