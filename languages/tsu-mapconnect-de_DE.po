@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2024-04-20 11:42+0200\n"
+"POT-Creation-Date: 2024-04-21 15:37+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -267,67 +267,99 @@ msgstr ""
 "Fehler bei der Handhabung von Eingaben nach Postleitzahlen. Einige Daten "
 "wurden herausgefiltert."
 
-#: lib/util/TSUMDataHandler.php:49
+#: lib/util/TSUMDataHandler.php:54
 msgid "Table not found or defined. No connection established."
 msgstr "Tabelle nicht gefunden oder undefiniert. Keine Verbindung hergestellt."
 
-#: lib/util/TSUMDataHandler.php:59
+#: lib/util/TSUMDataHandler.php:64
 msgid "Database Host"
 msgstr "Datenbankhost"
 
-#: lib/util/TSUMDataHandler.php:66
+#: lib/util/TSUMDataHandler.php:71
 msgid "Database Name"
 msgstr "Datenbankname"
 
-#: lib/util/TSUMDataHandler.php:73
+#: lib/util/TSUMDataHandler.php:78
 msgid "Database User"
 msgstr "Datenbankuser"
 
-#: lib/util/TSUMDataHandler.php:80
+#: lib/util/TSUMDataHandler.php:85
 msgid "Database Pass"
 msgstr "Datenbankpasswort"
 
-#: lib/util/TSUMDataHandler.php:127
+#: lib/util/TSUMDataHandler.php:132
 msgid "Postcode output has been disabled in settings."
 msgstr "Die Ausgabe von Postleitzahlen wurde in den Einstellungen deaktiviert."
 
-#: lib/util/TSUMDataHandler.php:128
+#: lib/util/TSUMDataHandler.php:133
 msgid "Parameter table for external connection not set or found"
 msgstr ""
 "Tabelle mit Parametern zur externen Verbindung nicht gefunden oder gesetzt"
 
-#: lib/util/TSUMDataHandler.php:129
+#: lib/util/TSUMDataHandler.php:134
 msgid "Connection impossible - No parameters for connection."
 msgstr "Verbindung. Nicht möglich - Keine Verbindungsparameter gefunden."
 
-#: lib/util/TSUMDataHandler.php:130
+#: lib/util/TSUMDataHandler.php:135
 msgid "Cannot connect to external database - unknown connection error."
 msgstr ""
 "Keine Verbindung zur externen Datenbank - unbekannter Verbindungsfehler."
 
-#: lib/util/TSUMDataHandler.php:144
+#: lib/util/TSUMDataHandler.php:149
 msgid "table"
 msgstr "Tabelle"
 
-#: lib/util/TSUMDataHandler.php:145
+#: lib/util/TSUMDataHandler.php:150
 msgid "empty"
 msgstr "Leer"
 
-#: lib/util/TSUMDataHandler.php:187
+#: lib/util/TSUMDataHandler.php:233
+msgid "Something went wrong checking the table!"
+msgstr "Beim Prüfen der Tabelle ist etwas schiefgegangen!"
+
+#: lib/util/TSUMDataHandler.php:239
+msgid "General Status"
+msgstr "Allgemeiner Status"
+
+#: lib/util/TSUMDataHandler.php:243
 msgid "Parameters Table"
 msgstr "Parametertabelle"
 
-#: lib/util/TSUMDataHandler.php:207
+#: lib/util/TSUMDataHandler.php:263
 msgid "Connection Status"
 msgstr "Verbindungsstatus"
 
-#: lib/util/TSUMDataHandler.php:215
+#: lib/util/TSUMDataHandler.php:271
 msgid "Connection to external database established!"
 msgstr "Verbindung zu externer Datenbank hergestellt!"
 
-#: lib/util/TSUMDataHandler.php:218
+#: lib/util/TSUMDataHandler.php:274
 msgid "No connection to external database."
 msgstr "Keine Verbindung zur externen Datenbank."
+
+#: lib/util/TSUMDataHandler.php:281
+msgid "Status of Tables"
+msgstr "Status der Tabellen"
+
+#: lib/util/TSUMDataHandler.php:285
+msgid "Sections table"
+msgstr "IG-Tabelle"
+
+#: lib/util/TSUMDataHandler.php:290 lib/util/TSUMDataHandler.php:304
+msgid "Existing"
+msgstr "Existierend"
+
+#: lib/util/TSUMDataHandler.php:293 lib/util/TSUMDataHandler.php:307
+msgid "Missing"
+msgstr "Fehlend"
+
+#: lib/util/TSUMDataHandler.php:299
+msgid "Postcodes table"
+msgstr "Postleitzahlentabelle"
+
+#: lib/util/TSUMDataHandler.php:313
+msgid "Update"
+msgstr "Aktualisieren"
 
 #: lib/util/TSUMMsgHandler.php:22
 msgid "Request successful. You requested data for:"

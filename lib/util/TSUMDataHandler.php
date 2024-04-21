@@ -8,23 +8,28 @@ namespace lib\util;
  *
  * @author marconagel
  */
-class TSUMDataHandler {
+defined( 'ABSPATH' ) or die( 'Direct access not allowed!' );
+
+//require config
+require_once TSU_MC_PLUGIN_PATH . 'lib/config/TSUMDBSettings.php';
+
+class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     
+    //parameters
     private $tsumParamTable;
     private $tsumParams;
     private $tsumPFX;
     private $tsumWPDB;
     
+    //table names
+    private $igTable = 'events_igs';
+    private $pcTable = 'events_ig_plz';
+    
    /**
     * 
     * @param string $table - Database table in WordPress db holding params to connect to external table
     */
-    public function __construct ( $table, $params = [ 
-                                                        'host' => 'ig_event_db_host', 
-                                                        'db' => 'ig_event_db_name',
-                                                        'user' => 'ig_event_db_user',
-                                                        'password' => 'ig_event_db_password',        
-                                                    ] ) {       
+    public function __construct ( $table, $params = parent::TSUM_CON_SETTINGS ) {       
         global $wpdb;
         
         $this->tsumWPDB = $wpdb;
@@ -182,7 +187,37 @@ class TSUMDataHandler {
         
         return $pcArray;
         
-    }                    
+    }     
+      
+    //allowed: sections | postcodes as option for tables - global $extdb must be set before using this function
+    private function tsumGetisTableUptoDate( $table = 'postcodes' ) {
+        
+        //get extdb
+        global $extdb;
+        
+        //single row query to check if all is there
+        $query = "SELECT * FROM";
+        $tableName = $table === 'postcodes' ? parent::TSUM_TAB_PC_NAME : parent::TSUM_TAB_IG_NAME;
+        $cols = $table === 'postcodes' ? parent::TSUM_TAB_PC_COLS : parent::TSUM_TAB_IGS_COLS;
+        
+        $result = $extdb->get_row( $query . " " . $tableName );
+        
+        $exist = '';
+        $abundandt = '';
+
+        foreach ($cols as $column) {
+
+            if (isset($result->$column)) {
+                $res = $exist === '' ? $column : ',' . $column;
+                $exist .= $res;
+            } else {
+                $res = $abundandt === '' ? $column : ',' . $column;
+                $abundandt .= $res;
+            }
+        }
+        return ['exist' => $exist, 'missing' => $abundandt];
+        
+    }
     
     public function tsumPrintConnectionDataTable() {
         
@@ -192,11 +227,38 @@ class TSUMDataHandler {
         //query database
         $conParams = $this->tsumLoadConnectionParams();
         
-        $prefixedTable = $this->tsumPFX . $this->tsumParamTable;             
+        $prefixedTable = $this->tsumPFX . $this->tsumParamTable;    
+        
+        //error msg
+        $tableError = esc_html__('Something went wrong checking the table!', 'tsu-mapconnect');
+        
+        //get $_POST data
+        $update = [ parent::TSUM_TAB_IG_NAME => false, parent::TSUM_TAB_PC_NAME => false ];
+        
+        //check nonce and set update
+        if ( isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'update-table-columns' ) ) {
+        
+            $update[ parent::TSUM_TAB_IG_NAME ] = isset( $_POST[parent::TSUM_TAB_IG_NAME] ) 
+                    && $_POST[parent::TSUM_TAB_IG_NAME] === 'UPDATE' ? true : false;    
+
+            $update[ parent::TSUM_TAB_PC_NAME ] = isset( $_POST[parent::TSUM_TAB_PC_NAME] ) 
+                    && $_POST[parent::TSUM_TAB_PC_NAME] === 'UPDATE' ? true : false;               
+            
+        }
+        
+        //TODO: Implement table updating
         
         if ( !empty( $conParams ) ): ?> 
+            <div>
+                <?php echo 'Update for ' . parent::TSUM_TAB_IG_NAME . ':' . ( $update[ parent::TSUM_TAB_IG_NAME ] === true ? ' true' : ' false' ) ?>
+                <?php echo 'Update for ' . parent::TSUM_TAB_PC_NAME . ':' . ( $update[ parent::TSUM_TAB_PC_NAME  ] === true ? ' true' : ' false' ) ?>
+            </div>
             <table class="widefat striped">
                 <tbody>
+                    <tr>
+                        <td><b><?php echo esc_html__('General Status', 'tsu-mapconnect'); ?></b></td>
+                        <td>&nbsp;</td>
+                    </tr>                    
                     <tr>
                         <td><?php echo esc_html__( 'Parameters Table', 'tsu-mapconnect' );  ?></td>
                         <td><?php echo $prefixedTable; ?></td>
@@ -234,9 +296,63 @@ class TSUMDataHandler {
                                 
                             ?>                            
                         </td>
-                    </tr>                     
+                    </tr>   
+                    <tr>
+                        <td><b><?php echo esc_html__('Status of Tables', 'tsu-mapconnect'); ?></b></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: middle;"><?php echo esc_html__('Sections table', 'tsu-mapconnect') . ' (' . parent::TSUM_TAB_IG_NAME . ')'; ?></td>
+                        <td style="vertical-align: middle;">
+                            <?php 
+                                $sectionstatus = $this->tsumGetisTableUptoDate( 'sections' );
+                                echo $sectionstatus === false ? $tableError : 
+                                        esc_html__('Existing', 'tsu-mapconnect') . ': ' . $sectionstatus['exist'] .
+                                        ( empty( $sectionstatus['missing'] ) ? '' : 
+                                                ', <span style="color: #d63638;">' . 
+                                                esc_html__('Missing', 'tsu-mapconnect') . ': ' . 
+                                                $sectionstatus['missing'] . '</span>' ); 
+                                
+                                if ( !empty( $sectionstatus['missing'] ) ) { 
+                                    $this->tsumRenderUpdateTableFormButton( parent::TSUM_TAB_IG_NAME );
+                                }                                
+                            ?>
+                        </td>                        
+                    </tr>   
+                    <tr>
+                        <td style="vertical-align: middle;"><?php echo esc_html__('Postcodes table', 'tsu-mapconnect') . ' (' . parent::TSUM_TAB_PC_NAME . ')'; ?></td>
+                        <td style="vertical-align: middle;">
+                            <?php 
+                                $pcstatus = $this->tsumGetisTableUptoDate();
+                                echo $pcstatus === false ? $tableError : 
+                                        esc_html__('Existing', 'tsu-mapconnect') . ': ' . $pcstatus['exist'] . 
+                                        ( empty( $pcstatus['missing'] ) ? '' : 
+                                                ', <span style="color: #d63638;">' . 
+                                                esc_html__('Missing', 'tsu-mapconnect') . ': ' . 
+                                                $pcstatus['missing'] . '</span>' ); 
+                                
+                                if ( !empty( $pcstatus['missing'] ) ) { 
+                                    $this->tsumRenderUpdateTableFormButton( parent::TSUM_TAB_PC_NAME );
+                                }
+                            ?>
+                        </td>
+                    </tr>                       
                 </tbody>
             </table>
         <?php endif;
+    }
+    
+    private function tsumRenderUpdateTableFormButton( $table ) {
+        ?>
+            <div style="padding-top: 0.5rem">
+                <form id="form_update_table_<?php echo $table ?>" method="post">
+                    <?php wp_nonce_field('update-table-columns'); ?>
+                    <input type="hidden" id="<?php echo $table ?>" name="<?php echo $table ?>" value="UPDATE">
+                    <button type="submit" id="submit_update_table_<?php echo $table ?>" class="button button-small button-primary">
+                        <?php echo esc_html__('Update', 'tsu-mapconnect'); ?>
+                    </button>
+                </form>
+            </div>
+        <?php
     }
 }
