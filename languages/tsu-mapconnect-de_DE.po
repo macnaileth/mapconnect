@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2024-04-21 15:37+0200\n"
+"POT-Creation-Date: 2024-05-02 09:25+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -313,51 +313,60 @@ msgstr "Tabelle"
 msgid "empty"
 msgstr "Leer"
 
-#: lib/util/TSUMDataHandler.php:233
+#: lib/util/TSUMDataHandler.php:331
 msgid "Something went wrong checking the table!"
 msgstr "Beim Prüfen der Tabelle ist etwas schiefgegangen!"
 
-#: lib/util/TSUMDataHandler.php:239
+#: lib/util/TSUMDataHandler.php:359
+msgid "Database table columns could not be updated!"
+msgstr "Spalten der Datenbanktabelle konnten nicht upgedated werden!"
+
+#: lib/util/TSUMDataHandler.php:363
+msgid "Backup of database table failed, update not possible!"
+msgstr ""
+"Backup der Datenbanktabelle ist fehlgeschlagen. Update ist nicht möglich!"
+
+#: lib/util/TSUMDataHandler.php:371
 msgid "General Status"
 msgstr "Allgemeiner Status"
 
-#: lib/util/TSUMDataHandler.php:243
+#: lib/util/TSUMDataHandler.php:375
 msgid "Parameters Table"
 msgstr "Parametertabelle"
 
-#: lib/util/TSUMDataHandler.php:263
+#: lib/util/TSUMDataHandler.php:395
 msgid "Connection Status"
 msgstr "Verbindungsstatus"
 
-#: lib/util/TSUMDataHandler.php:271
+#: lib/util/TSUMDataHandler.php:403
 msgid "Connection to external database established!"
 msgstr "Verbindung zu externer Datenbank hergestellt!"
 
-#: lib/util/TSUMDataHandler.php:274
+#: lib/util/TSUMDataHandler.php:406
 msgid "No connection to external database."
 msgstr "Keine Verbindung zur externen Datenbank."
 
-#: lib/util/TSUMDataHandler.php:281
+#: lib/util/TSUMDataHandler.php:413
 msgid "Status of Tables"
 msgstr "Status der Tabellen"
 
-#: lib/util/TSUMDataHandler.php:285
+#: lib/util/TSUMDataHandler.php:417
 msgid "Sections table"
 msgstr "IG-Tabelle"
 
-#: lib/util/TSUMDataHandler.php:290 lib/util/TSUMDataHandler.php:304
+#: lib/util/TSUMDataHandler.php:422 lib/util/TSUMDataHandler.php:440
 msgid "Existing"
 msgstr "Existierend"
 
-#: lib/util/TSUMDataHandler.php:293 lib/util/TSUMDataHandler.php:307
+#: lib/util/TSUMDataHandler.php:425 lib/util/TSUMDataHandler.php:443
 msgid "Missing"
 msgstr "Fehlend"
 
-#: lib/util/TSUMDataHandler.php:299
+#: lib/util/TSUMDataHandler.php:435
 msgid "Postcodes table"
 msgstr "Postleitzahlentabelle"
 
-#: lib/util/TSUMDataHandler.php:313
+#: lib/util/TSUMDataHandler.php:464
 msgid "Update"
 msgstr "Aktualisieren"
 

@@ -207,7 +207,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
 
         foreach ($cols as $column) {
 
-            if (isset($result->$column)) {
+            if ( isset($result->$column) ) {
                 $res = $exist === '' ? $column : ',' . $column;
                 $exist .= $res;
             } else {
@@ -217,6 +217,104 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         }
         return ['exist' => $exist, 'missing' => $abundandt];
         
+    }
+    
+    private function tsumCreateBackupFromTable( $table = 'postcodes', $backup_postfix = parent::TSUM_BACKUP_PFX ) {
+        
+        global $extdb;
+        
+        //check connection to external db, connect, if needed
+        if ( !isset($extdb) || empty($extdb) ) {
+            //load params
+            $conParams = $this->tsumLoadConnectionParams();
+            $extconnection = empty( $conParams ) ? false : $this->tsumConnectExternal( $conParams );
+            
+            if ( $extconnection === false ) {
+               return false; 
+            }    
+        } 
+        
+        $original_table = $table === 'postcodes' ? parent::TSUM_TAB_PC_NAME : parent::TSUM_TAB_IG_NAME;
+        $new_table = $original_table . parent::TSUM_BACKUP_PFX;
+        
+        $queries = [ 
+            "CREATE TABLE $new_table LIKE $original_table", 
+            "INSERT INTO $new_table SELECT * FROM $original_table",
+            "DROP TABLE IF EXISTS $new_table" ];
+        
+        //run queries for backup
+        $result = $extdb->query( $queries[2] ); //drop old backup
+        $result = $extdb->query( $queries[0] ); //create new backup
+        
+        if ( $result === false ) {
+            return false;
+        } else {
+            $result = $extdb->query( $queries[1] );
+            
+            return $result === false ? false : true;
+            
+        }
+        
+        return false;
+        
+    }    
+    
+    private function tsumUpdateTable( $table = 'postcodes') {
+        
+        global $extdb;        
+       
+        $tableToUpdate = $table === 'postcodes' ? parent::TSUM_TAB_PC_NAME : parent::TSUM_TAB_IG_NAME;
+        $columnDefinitions = $table === 'postcodes' ? parent::TSUM_TAB_PC_DEF_COLS : parent::TSUM_TAB_IGS_DEF_COLS;
+        $missingCols = $this->tsumGetisTableUptoDate( $table );
+
+        $appendCol = '';
+        $colsSQL = '';
+        
+        if ( $missingCols === false ) {
+            return false;
+        } else {
+            if ( !isset($missingCols['missing']) || empty($missingCols['missing']) ) {
+                return false;
+            } else {
+                //create array from commasep strings
+                $colsArray = [ 'exist' => explode( ",", $missingCols['exist'] ), 'missing' => explode( ",", $missingCols['missing'] )];
+                //insert after this one                 
+                $appendCol = isset( $missingCols['exist'] ) && !empty( $missingCols['exist'] ) ? 
+                        $colsArray['exist'][ array_key_last( $colsArray['exist'] ) ] : '';
+                
+                //foreach cycle throhuh missing array and append to colsSQL
+                foreach( $colsArray['missing'] as $column ) {
+                    
+                    $statement = "ADD COLUMN $column " . $columnDefinitions[ $column ] . " DEFAULT -1 AFTER $appendCol";
+                    
+                    if ( empty($colsSQL) ) {
+                        $colsSQL = $statement;
+                        $appendCol = $column;
+                    }
+                    else {
+                        $colsSQL .= ', ' . $statement;
+                        $appendCol = $column;
+                    }
+                }
+            }
+        }
+        $query = "ALTER TABLE " . $tableToUpdate . " " . $colsSQL . ';';
+        
+        //execute query
+        if ( !empty( $query ) ) {
+            
+            $result = $extdb->query( $query );
+            
+            if ( $result === false ) {
+                return false;
+            } else {
+                return true;
+            }
+            
+        } else {
+            return false;
+        } 
+        return false;      
     }
     
     public function tsumPrintConnectionDataTable() {
@@ -244,15 +342,32 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             $update[ parent::TSUM_TAB_PC_NAME ] = isset( $_POST[parent::TSUM_TAB_PC_NAME] ) 
                     && $_POST[parent::TSUM_TAB_PC_NAME] === 'UPDATE' ? true : false;               
             
+        }        
+        
+        //table updating
+        if ( $update[ parent::TSUM_TAB_IG_NAME ] === true || $update[ parent::TSUM_TAB_PC_NAME  ] === true ) {
+            
+            $update_table = $update[ parent::TSUM_TAB_PC_NAME  ] === true ? 'postcodes' : 'igs';
+            $backuped = $this->tsumCreateBackupFromTable( $update_table );
+            
+            //continue if backup worked
+            if ( $backuped === true ) {
+                //do the regular updating stuff
+                $colUpdate = $this->tsumUpdateTable( $update_table );      
+                
+                if ( $colUpdate === false ) {
+                    add_settings_error( 'tsumMCOptions', '2', esc_html__( 'Database table columns could not be updated!', 'tsu-mapconnect' ) );
+                } else {
+                    //TODO: Great setup, insert default data from provided csv, resort all stuff, done
+                    
+                }
+                
+            } else {
+                add_settings_error( 'tsumMCOptions', '2', esc_html__( 'Backup of database table failed, update not possible!', 'tsu-mapconnect' ) );
+            }    
         }
         
-        //TODO: Implement table updating
-        
         if ( !empty( $conParams ) ): ?> 
-            <div>
-                <?php echo 'Update for ' . parent::TSUM_TAB_IG_NAME . ':' . ( $update[ parent::TSUM_TAB_IG_NAME ] === true ? ' true' : ' false' ) ?>
-                <?php echo 'Update for ' . parent::TSUM_TAB_PC_NAME . ':' . ( $update[ parent::TSUM_TAB_PC_NAME  ] === true ? ' true' : ' false' ) ?>
-            </div>
             <table class="widefat striped">
                 <tbody>
                     <tr>
