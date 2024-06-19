@@ -317,10 +317,17 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         return false;      
     }
     
+    private function tsumPerformCSVImport( $table, $delete = true ) {
+        
+    }
+    
     public function tsumPrintConnectionDataTable() {
         
         //get global extdb
         global $extdb;
+        
+        //use helpers to check paths' existance
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
         
         //query database
         $conParams = $this->tsumLoadConnectionParams();
@@ -331,18 +338,43 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         $tableError = esc_html__('Something went wrong checking the table!', 'tsu-mapconnect');
         
         //get $_POST data
-        $update = [ parent::TSUM_TAB_IG_NAME => false, parent::TSUM_TAB_PC_NAME => false ];
+        $update = [ parent::TSUM_TAB_IG_NAME => false, parent::TSUM_TAB_PC_NAME => false ]; //update
+        $import = [ parent::TSUM_TAB_IG_NAME => false, parent::TSUM_TAB_PC_NAME => false ]; //import
+        $fileimport = [ parent::TSUM_TAB_IG_NAME => false, parent::TSUM_TAB_PC_NAME => false ]; //csv file import
         
         //check nonce and set update
         if ( isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'update-table-columns' ) ) {
         
+            //set update
             $update[ parent::TSUM_TAB_IG_NAME ] = isset( $_POST[parent::TSUM_TAB_IG_NAME] ) 
                     && $_POST[parent::TSUM_TAB_IG_NAME] === 'UPDATE' ? true : false;    
 
             $update[ parent::TSUM_TAB_PC_NAME ] = isset( $_POST[parent::TSUM_TAB_PC_NAME] ) 
                     && $_POST[parent::TSUM_TAB_PC_NAME] === 'UPDATE' ? true : false;               
             
-        }        
+        }  
+        //set import
+        if ( isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'import-table-columns' ) ) {
+        
+            //set import
+            $import[ parent::TSUM_TAB_IG_NAME ] = isset( $_POST[parent::TSUM_TAB_IG_NAME] ) 
+                    && $_POST[parent::TSUM_TAB_IG_NAME] === 'IMPORT' ? true : false;    
+
+            $import[ parent::TSUM_TAB_PC_NAME ] = isset( $_POST[parent::TSUM_TAB_PC_NAME] ) 
+                    && $_POST[parent::TSUM_TAB_PC_NAME] === 'IMPORT' ? true : false;               
+            
+        }  
+        //set csv import
+        if ( isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'fileimport-table-columns' ) ) {
+        
+            //set csv import
+            $fileimport[ parent::TSUM_TAB_IG_NAME ] = isset( $_POST[parent::TSUM_TAB_IG_NAME] ) 
+                    && $_POST[parent::TSUM_TAB_IG_NAME] === 'FILEIMPORT' ? true : false;    
+
+            $fileimport[ parent::TSUM_TAB_PC_NAME ] = isset( $_POST[parent::TSUM_TAB_PC_NAME] ) 
+                    && $_POST[parent::TSUM_TAB_PC_NAME] === 'FILEIMPORT' ? true : false;               
+            
+        }           
         
         //table updating
         if ( $update[ parent::TSUM_TAB_IG_NAME ] === true || $update[ parent::TSUM_TAB_PC_NAME  ] === true ) {
@@ -357,15 +389,23 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 
                 if ( $colUpdate === false ) {
                     add_settings_error( 'tsumMCOptions', '2', esc_html__( 'Database table columns could not be updated!', 'tsu-mapconnect' ) );
-                } else {
-                    //TODO: Great setup, insert default data from provided csv, resort all stuff, done
-                    
                 }
                 
             } else {
                 add_settings_error( 'tsumMCOptions', '2', esc_html__( 'Backup of database table failed, update not possible!', 'tsu-mapconnect' ) );
             }    
+        }    
+        
+        if ( $fileimport[ parent::TSUM_TAB_IG_NAME ] === true || $fileimport[ parent::TSUM_TAB_PC_NAME  ] === true ) { 
+            
+            $update_table = $update[ parent::TSUM_TAB_PC_NAME  ] === true ? 'postcodes' : 'igs';
+            
+            //TODO: perform data import, write function -> do database backup before
+            $this->tsumPerformCSVImport( $update_table );
+            
         }
+        
+        echo 'FILEIMPORT SET: IG: ' . $fileimport[ parent::TSUM_TAB_IG_NAME ] . ' PLZ: ' . $fileimport[ parent::TSUM_TAB_PC_NAME ];
         
         if ( !empty( $conParams ) ): ?> 
             <table class="widefat striped">
@@ -429,8 +469,9 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                                                 $sectionstatus['missing'] . '</span>' ); 
                                 
                                 if ( !empty( $sectionstatus['missing'] ) ) { 
-                                    $this->tsumRenderUpdateTableFormButton( parent::TSUM_TAB_IG_NAME );
-                                }                                
+                                    $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_IG_NAME );
+                                }
+                                $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_IG_NAME, 'import' );                                
                             ?>
                         </td>                        
                     </tr>   
@@ -447,27 +488,46 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                                                 $pcstatus['missing'] . '</span>' ); 
                                 
                                 if ( !empty( $pcstatus['missing'] ) ) { 
-                                    $this->tsumRenderUpdateTableFormButton( parent::TSUM_TAB_PC_NAME );
+                                    $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_PC_NAME );
                                 }
+                                $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_PC_NAME, 'import' );
                             ?>
                         </td>
-                    </tr>                       
+                    </tr>    
+                    <tr>
+                        <td><?php echo esc_html__( 'CSV import directory', 'tsu-mapconnect' );  ?></td>
+                        <td>
+                            <?php 
+                                echo TSU_MC_PLUGIN_PATH . 'data/csv/';
+                                if ( \lib\util\TSUMHelpers::tsumIsDirEmpty( TSU_MC_PLUGIN_PATH . 'data/csv/' ) ) {
+                                    echo '<br><i>' . esc_html__( 'No CSV file found in directory.', 'tsu-mapconnect' ) . '</i>';
+                                } else {
+                                    $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_PC_NAME, 'fileimport' );
+                                }
+                            ?>                           
+                        </td>
+                    </tr>                     
                 </tbody>
             </table>
+            <p><i><?php echo esc_html__('If you press the "import"-button, data from the csv file stored at the import location of the plugin will be loaded into the according table. Only do this if you are sure what you are doing. The files must be named correctly, e.g. csv_import_plz.csv or csv_import_section.csv.', 'tsu-mapconnect') ?></i></p>
         <?php endif;
     }
     
-    private function tsumRenderUpdateTableFormButton( $table ) {
-        ?>
+    //creates a form around a button to perform table ops. $type = 'update' || 'import'
+    private function tsumRenderTableFormActionButton( $table, $type = 'update' ) {
+        
+        $label = $type ? esc_html__( ucfirst( $type ), 'tsu-mapconnect' ) : '';  
+        
+        if ( !empty($label) ): ?>
             <div style="padding-top: 0.5rem">
-                <form id="form_update_table_<?php echo $table ?>" method="post">
-                    <?php wp_nonce_field('update-table-columns'); ?>
-                    <input type="hidden" id="<?php echo $table ?>" name="<?php echo $table ?>" value="UPDATE">
-                    <button type="submit" id="submit_update_table_<?php echo $table ?>" class="button button-small button-primary">
-                        <?php echo esc_html__('Update', 'tsu-mapconnect'); ?>
+                <form id="form_<?php echo $type ?>_table_<?php echo $table ?>" method="post">
+                    <?php wp_nonce_field( $type . '-table-columns' ); ?>
+                    <input type="hidden" id="<?php echo $table ?>" name="<?php echo $table ?>" value="<?php echo strtoupper( $type ) ?>">
+                    <button type="submit" id="submit_<?php echo $type ?>_table_<?php echo $table ?>" class="button button-small button-primary">
+                        <?php echo $label; ?>
                     </button>
                 </form>
             </div>
-        <?php
+        <?php endif;
     }
 }
