@@ -317,8 +317,32 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         return false;      
     }
     
-    private function tsumPerformCSVImport( $table, $delete = true ) {
+    private function tsumPerformCSVImport( $tableCSV, $delete = true ) {
+           
+        $file = fopen( TSU_MC_PLUGIN_PATH . 'data/csv/' . $tableCSV . '.csv', "r" );
         
+        //handle the opened file
+        $rowCount = 0;
+        $data = [];
+        
+        while( ( $row = fgetcsv($file, 1000, ";") ) !== FALSE) {
+            if( $rowCount > 0 ){
+                //Sanitize Data and add
+                $postCode = is_numeric( $row[0] ) ? $row[0] : false;
+                $accIG = is_numeric( $row[1] ) ? $row[1] : "";
+                
+                if ( $postCode !== false ) {
+                    $data[] = "('{$postCode}', '{$accIG}')";
+                }
+            }
+            $rowCount++;
+        }  
+        
+        fclose( $file ); 
+
+        //TODO: insert data into database at according columns. Overwrite existing
+        
+        return $rowCount;
     }
     
     public function tsumPrintConnectionDataTable() {
@@ -363,18 +387,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             $import[ parent::TSUM_TAB_PC_NAME ] = isset( $_POST[parent::TSUM_TAB_PC_NAME] ) 
                     && $_POST[parent::TSUM_TAB_PC_NAME] === 'IMPORT' ? true : false;               
             
-        }  
-        //set csv import
-        if ( isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'fileimport-table-columns' ) ) {
-        
-            //set csv import
-            $fileimport[ parent::TSUM_TAB_IG_NAME ] = isset( $_POST[parent::TSUM_TAB_IG_NAME] ) 
-                    && $_POST[parent::TSUM_TAB_IG_NAME] === 'FILEIMPORT' ? true : false;    
-
-            $fileimport[ parent::TSUM_TAB_PC_NAME ] = isset( $_POST[parent::TSUM_TAB_PC_NAME] ) 
-                    && $_POST[parent::TSUM_TAB_PC_NAME] === 'FILEIMPORT' ? true : false;               
-            
-        }           
+        }        
         
         //table updating
         if ( $update[ parent::TSUM_TAB_IG_NAME ] === true || $update[ parent::TSUM_TAB_PC_NAME  ] === true ) {
@@ -396,16 +409,20 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             }    
         }    
         
-        if ( $fileimport[ parent::TSUM_TAB_IG_NAME ] === true || $fileimport[ parent::TSUM_TAB_PC_NAME  ] === true ) { 
+        //do import
+        if ( $import[ parent::TSUM_TAB_IG_NAME ] === true || $import[ parent::TSUM_TAB_PC_NAME  ] === true ) { 
             
-            $update_table = $update[ parent::TSUM_TAB_PC_NAME  ] === true ? 'postcodes' : 'igs';
+            $import_table = $import[ parent::TSUM_TAB_PC_NAME  ] === true ? $this->pcTable : $this->igTable;
             
             //TODO: perform data import, write function -> do database backup before
-            $this->tsumPerformCSVImport( $update_table );
+            echo 'Table to import to: ' . $import_table;
+            $rowsImported = $this->tsumPerformCSVImport( $import_table );
+            
+            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Rows imported:', 'tsu-mapconnect') . ' ' . $rowsImported . '</p></div>';
             
         }
         
-        echo 'FILEIMPORT SET: IG: ' . $fileimport[ parent::TSUM_TAB_IG_NAME ] . ' PLZ: ' . $fileimport[ parent::TSUM_TAB_PC_NAME ];
+        echo 'FILEIMPORT SET: IG: ' . $import[ parent::TSUM_TAB_IG_NAME ] . ' PLZ: ' . $import[ parent::TSUM_TAB_PC_NAME ];
         
         if ( !empty( $conParams ) ): ?> 
             <table class="widefat striped">
@@ -471,7 +488,9 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                                 if ( !empty( $sectionstatus['missing'] ) ) { 
                                     $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_IG_NAME );
                                 }
-                                $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_IG_NAME, 'import' );                                
+                                if ( \lib\util\TSUMHelpers::tsumFileExists( TSU_MC_PLUGIN_PATH . 'data/csv/' . $this->igTable . '.csv' ) ) {
+                                    $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_IG_NAME, 'import' );      
+                                }
                             ?>
                         </td>                        
                     </tr>   
@@ -490,7 +509,9 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                                 if ( !empty( $pcstatus['missing'] ) ) { 
                                     $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_PC_NAME );
                                 }
-                                $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_PC_NAME, 'import' );
+                                if ( \lib\util\TSUMHelpers::tsumFileExists( TSU_MC_PLUGIN_PATH . 'data/csv/' . $this->pcTable . '.csv' ) ) {
+                                    $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_PC_NAME, 'import' );
+                                }
                             ?>
                         </td>
                     </tr>    
@@ -499,17 +520,21 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                         <td>
                             <?php 
                                 echo TSU_MC_PLUGIN_PATH . 'data/csv/';
-                                if ( \lib\util\TSUMHelpers::tsumIsDirEmpty( TSU_MC_PLUGIN_PATH . 'data/csv/' ) ) {
-                                    echo '<br><i>' . esc_html__( 'No CSV file found in directory.', 'tsu-mapconnect' ) . '</i>';
-                                } else {
-                                    $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_PC_NAME, 'fileimport' );
-                                }
                             ?>                           
                         </td>
                     </tr>                     
                 </tbody>
             </table>
-            <p><i><?php echo esc_html__('If you press the "import"-button, data from the csv file stored at the import location of the plugin will be loaded into the according table. Only do this if you are sure what you are doing. The files must be named correctly, e.g. csv_import_plz.csv or csv_import_section.csv.', 'tsu-mapconnect') ?></i></p>
+            <p>
+                <?php if ( \lib\util\TSUMHelpers::tsumIsDirEmpty( TSU_MC_PLUGIN_PATH . 'data/csv/' )): ?>
+                    <div class="notice notice-info inline"><?php echo esc_html__( 'No CSV file found in directory.', 'tsu-mapconnect' ); ?></div>
+                <?php else: ?>
+                    <div class="notice notice-info inline"><?php echo esc_html__( 'Files found in directory.', 'tsu-mapconnect' ); ?></div>
+                    <i>
+                        <?php echo esc_html__('If you press the "import"-button, data from the csv file stored at the import location of the plugin will be loaded into the according table. Only do this if you are sure what you are doing. The files must be named correctly, e.g. event_ig_plz.csv or events_igs.csv.', 'tsu-mapconnect') ?>
+                    </i>                    
+                <?php endif; ?>
+            </p>
         <?php endif;
     }
     
