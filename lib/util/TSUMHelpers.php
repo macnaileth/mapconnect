@@ -61,15 +61,60 @@ class TSUMHelpers {
         
         $match_full = 'DIMB IG';
         $match_half = 'IG';
+        $match_esc_full = 'DIMB%20IG%20';
+        $match_exc_half = 'IG%20';
         
         if ( str_starts_with( $string, $match_full ) ) {
             return $string;
         } else if ( str_starts_with( $string, $match_half ) ) {
+            if ( str_starts_with( $string, $match_exc_half ) ) {
+                return str_replace( $match_exc_half, $match_full . ' ', $string);
+            }
             return 'DIMB ' . $string;
-        } else {
+        } else if ( str_starts_with( $string, $match_esc_full ) ) {
+            return str_replace( $match_esc_full, $match_full . ' ', $string);
+        }  else if ( str_starts_with( $string, $match_exc_half ) ) {
+            return str_replace( $match_exc_half, $match_full . ' ', $string);
+        }  else {
             return $match_full . ' ' . $string;
         }
         
         return '';
+    }
+    
+    /**
+     * tsumIsDirEmpty ( $dir )
+     * very small little helper function to check if a directory contains some files. Clears statcache to prevent false results
+     * Kudos: https://stackoverflow.com/questions/7497733/how-can-i-use-php-to-check-if-a-directory-is-empty
+     * 
+     * @param string $dir = directory to check for contents
+     * @return boolean = true | false if empty or not. returns also false if directory not present or if string points to a file 
+     */
+    public static function tsumIsDirEmpty ( $dir ) {
+        
+        clearstatcache();
+        
+        $fileItr = new \FilesystemIterator( $dir );
+
+        if ( is_dir( $dir ) ) { 
+            return !$fileItr->valid();
+        } else {
+            return false;
+        }
+    }
+    /**
+     * tsumFileExists( $filename )
+     * Simply wraps around php file_exists method. 
+     * Will be probably extended later.
+     * 
+     * @param string $filename = file & path to check for
+     * @return bool true if exists, false if not.
+     */
+    public static function tsumFileExists( $filename ) {
+        
+        clearstatcache();
+        
+        return file_exists( $filename );
+        
     }
 }

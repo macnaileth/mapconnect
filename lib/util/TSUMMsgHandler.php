@@ -44,4 +44,8 @@ class TSUMMsgHandler {
         
     }
     
+    public static function tsumLogToConsole( $msg, $css = 'color:red;' ) {
+        echo "<script>console.log( '%c" . $msg . "', '" . $css . "' );</script>";
+    }
+    
 }

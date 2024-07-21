@@ -32,6 +32,8 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     public function __construct ( $table, $params = parent::TSUM_CON_SETTINGS ) {       
         global $wpdb;
         
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
+        
         $this->tsumWPDB = $wpdb;
         $this->tsumParamTable = $table;
         $this->tsumParams = $params;
@@ -119,13 +121,40 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         return false;
       
     }
+    /**
+     * tsumCheckAreaExists( $areaname )
+     * 
+     * @param string $areaname = Name of the area
+     * @return bool | int = returns false or ID of area in database
+     */
+    public function tsumCheckAreaExists( $areaname ) {
+        
+        global $extdb;
+        
+        //check connection and connect $extdb if needed
+        $connect = $this->tsumConnectExternal( $this->tsumLoadConnectionParams() );
+        
+        if ( $connect === false ) {
+            return false;
+        } else {
+            //fix areaname       
+            $fixedAName = \lib\util\TSUMHelpers::tsumFixDIMBQueryString($areaname);
+
+            $areaid = $extdb->get_var( $extdb->prepare( "SELECT id FROM events_igs WHERE name = %s", $fixedAName ) );  
+
+            if ( $areaid === null || !is_numeric( $areaid ) ) {
+                return false;
+            } else {
+                return $areaid;
+            } 
+        }
+        
+        return false;
+    }
     
     public function tsumRetrievePostCodesByAname( $areaname ) {
         
         global $extdb;
-        
-        //use helpers to correct input
-        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
         
         //messages array
         $msg = [ 
@@ -172,17 +201,43 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         return $postcodes;
     }
     
-    private function tsumGetPCArrayFromDB( $areaname, $db ) {
+    //set extendedData = true (default) to also retrieve name, district and federal state. 
+    //Will use openPLZ to fill database if fields are -1. only done on first request.
+    private function tsumGetPCArrayFromDB( $areaname, $db, $extendedData = true ) {
         
         //query ext db for the area id
         $areaid = $db->get_var( $db->prepare( "SELECT id FROM events_igs WHERE name = %s", $areaname ) ); 
         //query ext db for postcodes based on id
         $postcodes = $db->get_results( $db->prepare( "SELECT * FROM events_ig_plz WHERE ig = %d", $areaid ) ); 
+
+        $firstRun = false;
+        
+        if ( $extendedData === true ) {
+            foreach ($postcodes as $pc) {
+                if ( $pc->name == '-1' ) {
+                    $firstRun = true;
+                    break;
+                }
+            }
+            if ( $firstRun === true ) {
+                //TODO: Write function to retrieve all the data at once if on first run 
+                //OPENPLZ needs regex, pc list should look like: ^(70173|71364|70134)
+            }
+        }
         
         //create array of postcodes
         $pcArray = [];
         foreach ($postcodes as $pc) {
-            array_push( $pcArray, $pc->start );
+            if ( $extendedData === true ) {
+                array_push( $pcArray, [
+                    "postcode" => $pc->start,
+                    "name" => $pc->name,
+                    "district" => $pc->district,
+                    "federalstate" => $pc->federalState
+                        ] );
+            } else {
+                array_push( $pcArray, $pc->start );
+            }
         }
         
         return $pcArray;
@@ -318,6 +373,9 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     }
     
     private function tsumPerformCSVImport( $tableCSV, $delete = true ) {
+        
+        global $extdb; 
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMMsgHandler.php';
            
         $file = fopen( TSU_MC_PLUGIN_PATH . 'data/csv/' . $tableCSV . '.csv', "r" );
         
@@ -332,15 +390,59 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 $accIG = is_numeric( $row[1] ) ? $row[1] : "";
                 
                 if ( $postCode !== false ) {
-                    $data[] = "('{$postCode}', '{$accIG}')";
+                    $data[] = "('{$postCode}', -1, '{$accIG}')";
                 }
             }
             $rowCount++;
         }  
         
         fclose( $file ); 
+        //Delete file after closing
+        
+        if ( !unlink( TSU_MC_PLUGIN_PATH . 'data/csv/' . $tableCSV . '.csv' ) ) {
+            TSUMMsgHandler::tsumLogToConsole( esc_html__('Import file could not be deleted after reading for import while import propably succeed.', 'tsu-mapconnect') );
+        } else {
+            TSUMMsgHandler::tsumLogToConsole( esc_html__('Import file deleted.', 'tsu-mapconnect'), 'color:green;' );
+        }
 
-        //TODO: insert data into database at according columns. Overwrite existing
+        //insert data into database at according columns. Truncate first
+        $query = "TRUNCATE TABLE " . $tableCSV;
+        
+        $result = $extdb->query( $query );
+        
+        if ( $result === false ) {
+            return false;
+        } else {
+            //table truncated, continue and fill it
+            
+            //check if we have the plz DB and change column start to varchar for german postcodes
+            
+            if( $tableCSV === $this->pcTable ){
+                
+                $changeQuery = "ALTER TABLE " . $tableCSV . " MODIFY COLUMN start varchar(8)";
+                $result = $extdb->query( $changeQuery );                 
+                if ( $result === false ) {
+                    return false;
+                }                
+            }
+            
+            if( count( $data ) > 0 ) {
+                
+                $insertDataString = implode(", ", $data); 
+                //do not have to use wordpress prepare function here, because values are already sanitized above
+                //TODO: Padd PLZS or store as string in database
+                $insertQuery = "INSERT INTO " . $tableCSV . " (start, ende, ig) VALUES " . $insertDataString;
+                
+                $result = $extdb->query( $insertQuery );
+                
+                if ( $result === false ) {
+                    return false;
+                }
+                        
+            } else {
+                return false;
+            }
+        }
         
         return $rowCount;
     }
@@ -414,11 +516,25 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             
             $import_table = $import[ parent::TSUM_TAB_PC_NAME  ] === true ? $this->pcTable : $this->igTable;
             
-            //TODO: perform data import, write function -> do database backup before
-            echo 'Table to import to: ' . $import_table;
-            $rowsImported = $this->tsumPerformCSVImport( $import_table );
+            $backuped = $this->tsumCreateBackupFromTable( $import[ parent::TSUM_TAB_PC_NAME  ] === true ? 'postcodes' : 'igs' );
             
-            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Rows imported:', 'tsu-mapconnect') . ' ' . $rowsImported . '</p></div>';
+            //continue if backup worked
+            if ( $backuped === true ) {
+                //do the regular updating stuff
+                $rowsImported = $this->tsumPerformCSVImport( $import_table );      
+                
+                if ( $rowsImported === false ) {
+                    add_settings_error( 'tsumMCOptions', '2', esc_html__( 'No rows imported! Either file is empty or an error occured.', 'tsu-mapconnect' ) );
+                }
+                else {
+                    echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Rows imported:', 'tsu-mapconnect') . ' ' . $rowsImported . '</p></div>';
+                }
+                
+            } else {
+                add_settings_error( 'tsumMCOptions', '2', esc_html__( 'Backup of database table failed, import was not possible!', 'tsu-mapconnect' ) );
+            }               
+            
+            echo 'Table to import to: ' . $import_table . ' | ';
             
         }
         

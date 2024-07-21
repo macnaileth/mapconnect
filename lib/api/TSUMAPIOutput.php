@@ -37,7 +37,7 @@ class TSUMAPIOutput {
         $base = 'area';
         
         //area name route
-        register_rest_route( $namespace . '/' . $base, '/aname/(?P<areaname>([\w\/\+\-.:_]|%20)+)', array(
+        register_rest_route( $namespace . '/' . $base, '/aname/(?P<areaname>([\w\/\+\-.:_äöüÄÖÜß]|%20)+)', array(
           'methods' => 'GET',
           'callback' => array( $this, 'tsumAreaName' ),
           'permission_callback' => '__return_true',  
@@ -95,16 +95,35 @@ class TSUMAPIOutput {
         //load string helpers here
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
         
+        //connect to database
+        $connect = new \lib\util\TSUMDataHandler( isset( $this->settings['tsum_general_setting_db_table'] ) ? $this->settings['tsum_general_setting_db_table'] : '' );
+        
+        $areaID = $connect->tsumCheckAreaExists( $data['areaname'] );
+        $fixedAreaName = \lib\util\TSUMHelpers::tsumFixDIMBQueryString( $data['areaname'] );
+        
         //check if existing
         $pages = get_pages();
         $notice = [];
+        $exists = false;
+       
+        if ( $areaID !== false ){
+            $exists = true;
+        }        
+ 
+        $reqName = \lib\util\TSUMHelpers::tsumConvertToUmlaute($data['areaname'], true);
         
+        //check for meta information on pages
         foreach($pages as $page) {
             //get data and check if relevant stuff exists
-            $reqName = \lib\util\TSUMHelpers::tsumConvertToUmlaute($data['areaname'], true);
             
             $pAreaName = get_post_meta( $page->ID, '_meta_fields_tsum_areaname', true );
-            if ( !empty($pAreaName) && $pAreaName == $reqName ) {
+            if ( !empty($pAreaName) && 
+                    ( $pAreaName == $reqName 
+                    || 'DIMB ' . $pAreaName == $reqName 
+                    || 'DIMB IG ' . $pAreaName == $reqName 
+                    || $pAreaName == 'DIMB ' . $reqName 
+                    || $pAreaName == 'DIMB IG ' . $reqName
+                    || $pAreaName == 'IG ' . $reqName) ) {
                 //return area to response
                 return [ 
                             'response' => \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($reqName), 
@@ -113,7 +132,16 @@ class TSUMAPIOutput {
             } else {
                 $notice = \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($reqName, 404);
             }           
+        }   
+        
+        if ( $exists === true ) {
+            //return area to response
+            return [
+                'response' => \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($reqName),
+                'area' => $this->tsumArea(0, $reqName, true)
+            ];
         }
+        
         return $notice;
     }
     /**
@@ -228,33 +256,46 @@ class TSUMAPIOutput {
      * 
      * @param int $id ID of Page/Post
      * @param string $name name of area
+     * @param bool $reducedData only uses data from the database directly, no metadata from pages. Default: false
      * @return array of area data
      */
-    private function tsumArea( $id, $name ) {
+    private function tsumArea( $id, $name, $reducedData = false ) {
         
         //init data handler
         $tsumDataHandler = new \lib\util\TSUMDataHandler( isset( $this->settings['tsum_general_setting_db_table'] ) ? $this->settings['tsum_general_setting_db_table'] : '' ); 
 
-        //handle logo conversion to usable string
-        $logoRAW = get_post_meta($id, '_meta_fields_tsum_arealogo', true);
-        $logoStr = '';
-        if (!empty($logoRAW)) {
-            $logoStr = is_numeric($logoRAW) ? [
-                'full' => wp_get_attachment_image_src($logoRAW, 'full')[0],
-                'medium' => wp_get_attachment_image_src($logoRAW, 'medium')[0],
-                'thumb' => wp_get_attachment_image_src($logoRAW, 'thumbnail')[0]
-                    ] : $logoRAW;
+        if ( $reducedData === false ){
+            //handle logo conversion to usable string
+            $logoRAW = get_post_meta($id, '_meta_fields_tsum_arealogo', true);
+            $logoStr = '';
+            if (!empty($logoRAW)) {
+                $logoStr = is_numeric($logoRAW) ? [
+                    'full' => wp_get_attachment_image_src($logoRAW, 'full')[0],
+                    'medium' => wp_get_attachment_image_src($logoRAW, 'medium')[0],
+                    'thumb' => wp_get_attachment_image_src($logoRAW, 'thumbnail')[0]
+                        ] : $logoRAW;
+            }
+            //create pagedata array
+            $pageData = [
+                'id' => $id,
+                'title' => esc_attr(get_the_title($id)),
+                'url' => esc_url(get_page_link($id)),
+                'api' => get_site_url() . '/wp-json/wp/v2/pages/' . $id
+            ];
         }
-        //create pagedata array
-        $pageData = [
-            'id' => $id,
-            'title' => esc_attr(get_the_title($id)),
-            'url' => esc_url(get_page_link($id)),
-            'api' => get_site_url() . '/wp-json/wp/v2/pages/' . $id
-        ];
-        //TODO: USE STATIC HELPER
+        
+        if ( $reducedData === true ){
+            return [
+                'name' => \lib\util\TSUMHelpers::tsumFixDIMBQueryString( $name ),
+                'postcodes' => \lib\util\TSUMHelpers::tsumGetOptionByKey($this->settings, "tsum_general_setting_pc_output", '1') === true ?
+                explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus(get_post_meta($id, '_meta_fields_tsum_areapcs', true))) :
+                $tsumDataHandler->tsumRetrievePostCodesByAname( $name ),                
+                'data-extent' => 'reduced'
+            ];
+        }
+        
         $area = [
-            'name' => $name,
+            'name' => \lib\util\TSUMHelpers::tsumFixDIMBQueryString( $name ),
             'postcodes' => \lib\util\TSUMHelpers::tsumGetOptionByKey($this->settings, "tsum_general_setting_pc_output", '1') === true ?
             explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus(get_post_meta($id, '_meta_fields_tsum_areapcs', true))) :
             $tsumDataHandler->tsumRetrievePostCodesByAname( $name ),
@@ -264,7 +305,8 @@ class TSUMAPIOutput {
             'activities' => explode(',', \lib\util\TSUMCleanUp::tsumTrimCommaPlus(get_post_meta($id, '_meta_fields_tsum_areaactivities', true))),
             'description' => get_post_meta($id, '_meta_fields_tsum_areadesc', true),
             'socialmedia' => get_post_meta($id, '_meta_fields_tsum_areasocmedia', true) /* TODO: Find a format */,
-            'page-ref' => $pageData
+            'page-ref' => $pageData,
+            'data-extent' => 'full'
         ];
 
         return $area;
