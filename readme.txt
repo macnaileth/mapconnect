@@ -1,8 +1,9 @@
 === Map Connect Metadata and Map Application ===
 Contributors:      Marco Nagel & Kerstin Huppenbauer
-Tags:              block
+Tags:              block, database, club management, mapping, geodata, react, jsx, tsx, made for DIMB
 Tested up to:      6.4
-Stable tag:        0.0.9
+Stable tag:        0.1.0
+Requires PHP:      8.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,12 +38,14 @@ Advanced users who would like to build their stuff themsselves also refer to Ker
 1. Upload the plugin files to the `/wp-content/plugins/tsu-mapconnect` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
 
+You will have to setup the external database yourself. We provide a .csv to fill it with data. 
 
 == Frequently Asked Questions ==
 
 none ATM
 
 == Changelog ==
+29.07.2024 - Main API Endpoints finished a bit: /tsu-mapconnect/v1/area/aname/ and /tsu-mapconnect/v1/area/aname/<areaname> work with external database
 20.04.2024 - Updates to API Endpoints to get data from external database. now postcode retrieval can be switched to external data
 21.01.2024 - created this branch. Master/Origin contains all the stuff. This is simplified.
 15.11.2023 - Did a lot of updating, added map frontend element, updated edit fpr Gutenberg
@@ -54,6 +57,9 @@ none ATM
 17.06.2023 - Added configuration pane to Gutenberg react block and shortcode for app placement
 04.02.2024 - Added a settings page - work in progress
 07.02.2024 - Updated js dependencies and rebuilt blocks
+
+= 0.1.0 =
+* Finally somehow useable ;-)
 
 = 0.0.9 =
 * Forked the thing. About to add working settings page
