@@ -152,6 +152,39 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         return false;
     }
     
+    public function tsumRetrieveAvailableAreas() {
+        
+        global $extdb;
+        
+        //check connection and connect $extdb if needed
+        $connect = $this->tsumConnectExternal( $this->tsumLoadConnectionParams() );
+        
+        if ( $connect === false ) {
+            return false;
+        } else {
+            
+            $arrayofAreas = [];
+            
+            //get available areas from database
+            $query = "SELECT * FROM " . $this->igTable;
+            //run query, no sanization needed in this case
+            $result = $extdb->get_results( $query );
+            
+            foreach ($result as $row) {
+                $igdata = [ 
+                    'id' => $row->id,
+                    'name' => $row->name,
+                    'mail' => $row->mail,
+                    'active' => $row->aktiv == 0 ? false : true
+                        ];
+                array_push( $arrayofAreas, $igdata );
+            }
+            
+            return $arrayofAreas;
+        }                
+        return false;
+    }
+    
     public function tsumRetrievePostCodesByAname( $areaname ) {
         
         global $extdb;
@@ -203,7 +236,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     
     //set extendedData = true (default) to also retrieve name, district and federal state. 
     //Will use openPLZ to fill database if fields are -1. only done on first request.
-    private function tsumGetPCArrayFromDB( $areaname, $db, $extendedData = true ) {
+    private function tsumGetPCArrayFromDB( $areaname, $db, $extendedData = true, $batchNum = 50 ) {
         
         //query ext db for the area id
         $areaid = $db->get_var( $db->prepare( "SELECT id FROM events_igs WHERE name = %s", $areaname ) ); 
@@ -212,6 +245,9 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
 
         $firstRun = false;
         
+        
+        $strForRegex = '';
+       
         if ( $extendedData === true ) {
             foreach ($postcodes as $pc) {
                 if ( $pc->name == '-1' ) {
@@ -222,6 +258,19 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             if ( $firstRun === true ) {
                 //TODO: Write function to retrieve all the data at once if on first run 
                 //OPENPLZ needs regex, pc list should look like: ^(70173|71364|70134)
+                $pccount = 0;
+                $pcrowcount = $db->num_rows; //total rows in query
+                $totalRequestArray = []; //total requests array
+                //build string for request first
+                foreach ($postcodes as $pc) {
+                    $strForRegex .= $pc->start . '|';
+                    $pccount += 1;
+                }       
+                
+                $strForRegex = rtrim( $strForRegex, '|' );
+                
+                //TODO: make regex pattern shit - since openplz only supports 50 codes per request, we have to split
+                
             }
         }
         

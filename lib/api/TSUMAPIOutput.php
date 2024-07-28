@@ -36,8 +36,8 @@ class TSUMAPIOutput {
         $namespace = 'tsu-mapconnect/v' . $version;
         $base = 'area';
         
-        //area name route
-        register_rest_route( $namespace . '/' . $base, '/aname/(?P<areaname>([\w\/\+\-.:_äöüÄÖÜß]|%20)+)', array(
+        //area name route - old regex: (?P<areaname>([\w\/\+\-.:_äöüÄÖÜß]|%20)+) other: (?P<areaname>[\w].+)
+        register_rest_route( $namespace . '/' . $base, '/aname/(?P<areaname>[\w].+)', array(
           'methods' => 'GET',
           'callback' => array( $this, 'tsumAreaName' ),
           'permission_callback' => '__return_true',  
@@ -98,7 +98,7 @@ class TSUMAPIOutput {
         //connect to database
         $connect = new \lib\util\TSUMDataHandler( isset( $this->settings['tsum_general_setting_db_table'] ) ? $this->settings['tsum_general_setting_db_table'] : '' );
         
-        $areaID = $connect->tsumCheckAreaExists( $data['areaname'] );
+        $areaID = $connect->tsumCheckAreaExists( urldecode( $data['areaname'] ) );
         $fixedAreaName = \lib\util\TSUMHelpers::tsumFixDIMBQueryString( $data['areaname'] );
         
         //check if existing
@@ -110,7 +110,7 @@ class TSUMAPIOutput {
             $exists = true;
         }        
  
-        $reqName = \lib\util\TSUMHelpers::tsumConvertToUmlaute($data['areaname'], true);
+        $reqName = urldecode( \lib\util\TSUMHelpers::tsumConvertToUmlaute($data['areaname'], true) );
         
         //check for meta information on pages
         foreach($pages as $page) {
@@ -147,6 +147,7 @@ class TSUMAPIOutput {
     /**
      * tsumAreaListAll()
      * callback function to list all area data
+     * TODO: Rewrite function to display all areas
      * 
      * @return array
      */
@@ -155,20 +156,11 @@ class TSUMAPIOutput {
                         'response' => \lib\util\TSUMMsgHandler::tsumAPIReturnMessage('AREA_LIST'),
                         'areas' => []
                     ];
+        //init data handler
+        $tsumDataHandler = new \lib\util\TSUMDataHandler( isset( $this->settings['tsum_general_setting_db_table'] ) ? $this->settings['tsum_general_setting_db_table'] : '' ); 
         
-        //get the pages and return the needed params in API
-        $pages = get_pages();
-        
-        foreach($pages as $page) {
-            //get data and check if relevant stuff exists
-            $pAreaName = get_post_meta( $page->ID, '_meta_fields_tsum_areaname', true );
-            if (!empty($pAreaName)) {
-                
-                $area = $this->tsumArea( $page->ID, $pAreaName );               
-                array_push($response['areas'], $area);
-                
-            }
-        }
+        //fetch available areas from database
+        $response['areas'] = $tsumDataHandler->tsumRetrieveAvailableAreas();
         
         return $response;
     }
