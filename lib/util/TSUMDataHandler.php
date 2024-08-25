@@ -246,7 +246,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         $firstRun = false;
         
         
-        $strForRegex = '';
+        $arrForRegex = [];
        
         if ( $extendedData === true ) {
             foreach ($postcodes as $pc) {
@@ -258,19 +258,32 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             if ( $firstRun === true ) {
                 //TODO: Write function to retrieve all the data at once if on first run 
                 //OPENPLZ needs regex, pc list should look like: ^(70173|71364|70134)
-                $pccount = 0;
+                $pccount = 1;
                 $pcrowcount = $db->num_rows; //total rows in query
                 $totalRequestArray = []; //total requests array
+                $requestKeysNum = ceil( $pcrowcount / $batchNum ); //maximum keys
+                $currentKey = 0; //key pointer of the totalRequestArray
                 //build string for request first
-                foreach ($postcodes as $pc) {
-                    $strForRegex .= $pc->start . '|';
+                foreach ($postcodes as $pc) {                   
+                    $arrForRegex[$currentKey] = isset ( $arrForRegex[$currentKey] ) ? $arrForRegex[$currentKey] . $pc->start . '|' : $pc->start . '|';
                     $pccount += 1;
-                }       
+                    
+                    if ( $pccount === $batchNum ) {
+                        $currentKey += 1;
+                        $pccount = 1;
+                    }                    
+                } 
+                //form & prepare the keys of the arrForRegex
+                $formedArrForRegex = [];
+                foreach ($arrForRegex as $key) {
+                    $formedArrForRegex[$key] = '(' . rtrim( $key, '|' ) . ')';
+                }
+                $arrForRegex = $formedArrForRegex; //overwrite array
                 
-                $strForRegex = rtrim( $strForRegex, '|' );
+                //$strForRegex = rtrim( $strForRegex, '|' );
                 
                 //TODO: make regex pattern shit - since openplz only supports 50 codes per request, we have to split
-                
+                //return [ "strings" => implode( ",", $arrForRegex ), "count total" => $pcrowcount, "count" => $pccount, "request keys" => $requestKeysNum ];
             }
         }
         
