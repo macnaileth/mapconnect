@@ -256,13 +256,13 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 }
             }
             if ( $firstRun === true ) {
-                //TODO: Write function to retrieve all the data at once if on first run 
+                //Function to retrieve all the data at once if on first run 
                 //OPENPLZ needs regex, pc list should look like: ^(70173|71364|70134)
                 $pccount = 1;
                 $pcrowcount = $db->num_rows; //total rows in query
                 $totalRequestArray = []; //total requests array
                 $requestKeysNum = ceil( $pcrowcount / $batchNum ); //maximum keys
-                $currentKey = 0; //key pointer of the totalRequestArray
+                $currentKey = 0; //key cursor of the totalRequestArray
                 //build string for request first
                 foreach ($postcodes as $pc) {                   
                     $arrForRegex[$currentKey] = isset ( $arrForRegex[$currentKey] ) ? $arrForRegex[$currentKey] . $pc->start . '|' : $pc->start . '|';
@@ -274,21 +274,44 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                     }                    
                 } 
                 //form & prepare the keys of the arrForRegex
-                $formedArrForRegex = [];
+                $formedArrForRegex['requeststrings'] = [];
+                $formedArrForRegex['apidata'] = [];
                 foreach ($arrForRegex as $key) {
-                    $formedArrForRegex[$key] = '(' . rtrim( $key, '|' ) . ')';
+                    //add request key
+                    $formedArrForRegex['requeststrings'][$key] = '(' . rtrim( $key, '|' ) . ')';
+                    //perform request to openplz.org
+                    $jsonPLZ = \lib\util\TSUMHelpers::tsumGetLocation( '^' . $formedArrForRegex['requeststrings'][$key] );
+                    $formedArrForRegex['apidata'] = empty( $formedArrForRegex['apidata'] ) ? $jsonPLZ[ 'data' ] : array_merge( $formedArrForRegex['apidata'], $jsonPLZ[ 'data' ] );
                 }
                 $arrForRegex = $formedArrForRegex; //overwrite array
                 
-                //$strForRegex = rtrim( $strForRegex, '|' );
-                
                 //TODO: make regex pattern shit - since openplz only supports 50 codes per request, we have to split
-                //return [ "strings" => implode( ",", $arrForRegex ), "count total" => $pcrowcount, "count" => $pccount, "request keys" => $requestKeysNum ];
+                $queryString = '';
+                $reloadPCs = false;
+                foreach ($arrForRegex['apidata'] as $key) {
+                    $queryString = $db->prepare( 
+                            "UPDATE events_ig_plz SET name = %s, district = %s, federalState = %s WHERE start = %s;", 
+                            $key['name'], $key['district']['name'], $key['federalState']['name'],$key['postalCode']
+                            );
+                    //work around **FUCK WORDPRESS DB FUNCTIONS** run queries here...
+                    $rowsAffected = $db->query( $queryString );
+                    if ( $rowsAffected > 0 ) {
+                        //we need to reload
+                        $reloadPCs = true;
+                    }
+                }
+                //if updates have been done, refresh $postcodes array before outputting
+                if ( $reloadPCs === true ) {
+                    $postcodes = $db->get_results( $db->prepare( "SELECT * FROM events_ig_plz WHERE ig = %d", $areaid ) ); 
+                }            
+                //return [ "querystring" => $queryString, "count total" => $pcrowcount, "count" => $pccount, "request keys" => $requestKeysNum ];
             }
         }
         
         //create array of postcodes
         $pcArray = [];
+        //insert first run at 0
+        array_push( $pcArray, [ "dbPopulation" => $firstRun === true ? true : false ] );            
         foreach ($postcodes as $pc) {
             if ( $extendedData === true ) {
                 array_push( $pcArray, [
@@ -492,7 +515,6 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 
                 $insertDataString = implode(", ", $data); 
                 //do not have to use wordpress prepare function here, because values are already sanitized above
-                //TODO: Padd PLZS or store as string in database
                 $insertQuery = "INSERT INTO " . $tableCSV . " (start, ende, ig) VALUES " . $insertDataString;
                 
                 $result = $extdb->query( $insertQuery );
