@@ -311,7 +311,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         //create array of postcodes
         $pcArray = [];
         //insert first run at 0
-        array_push( $pcArray, [ "dbPopulation" => $firstRun === true ? true : false ] );            
+        //array_push( $pcArray, [ "dbPopulation" => $firstRun === true ? true : false ] );            
         foreach ($postcodes as $pc) {
             if ( $extendedData === true ) {
                 array_push( $pcArray, [
