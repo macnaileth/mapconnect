@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2024-07-21 17:27+0200\n"
+"POT-Creation-Date: 2024-09-20 12:00+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -132,14 +132,6 @@ msgstr ""
 #: blocks/tsu-mapconnect-meta-block/src/render.php:2
 msgid "Map Connect Metadata – hello from a dynamic block!"
 msgstr "Map Connect Metadaten – Hallo aus einem dynamischen Block!"
-
-#: lib/api/TSUMAPIOutput.php:215
-msgid ""
-"Postcode output has been disabled in settings. Retrieving matching area not "
-"possible."
-msgstr ""
-"Die Ausgabe von Postleitzahlen wurde in den Einstellungen deaktiviert. "
-"Übereinstimmende Gebiete können nicht zurückgegeben werden."
 
 #: lib/ui/TSUMMetaboxes.php:45
 msgid "MapConnect area box"
@@ -287,33 +279,53 @@ msgstr "Datenbankuser"
 msgid "Database Pass"
 msgstr "Datenbankpasswort"
 
-#: lib/util/TSUMDataHandler.php:161
+#: lib/util/TSUMDataHandler.php:140
+msgid ""
+"Database connection failed - data could not be retrieved. Contact API "
+"Administrator if this persists."
+msgstr ""
+"Datenbankverbindung gescheitert - Daten konnten nicht geladen werden. Wenn "
+"dies erneut auftritt, ggf. API Administrator kontaktieren."
+
+#: lib/util/TSUMDataHandler.php:147
+msgid "Error while requesting data for"
+msgstr "Fehler während der Anfrage nach Daten für"
+
+#: lib/util/TSUMDataHandler.php:163
+msgid ""
+"No valid type (Postcode or Locality) set. Contact API Administrator if this "
+"persists."
+msgstr ""
+"Kein zulässiger Abfragetyp (Postleitzahl oder Ort) gesetzt. Wenn dies erneut "
+"auftritt, ggf. API Administrator kontaktieren."
+
+#: lib/util/TSUMDataHandler.php:239
 msgid "Postcode output has been disabled in settings."
 msgstr "Die Ausgabe von Postleitzahlen wurde in den Einstellungen deaktiviert."
 
-#: lib/util/TSUMDataHandler.php:162
+#: lib/util/TSUMDataHandler.php:240
 msgid "Parameter table for external connection not set or found"
 msgstr ""
 "Tabelle mit Parametern zur externen Verbindung nicht gefunden oder gesetzt"
 
-#: lib/util/TSUMDataHandler.php:163
+#: lib/util/TSUMDataHandler.php:241
 msgid "Connection impossible - No parameters for connection."
 msgstr "Verbindung. Nicht möglich - Keine Verbindungsparameter gefunden."
 
-#: lib/util/TSUMDataHandler.php:164
+#: lib/util/TSUMDataHandler.php:242
 msgid "Cannot connect to external database - unknown connection error."
 msgstr ""
 "Keine Verbindung zur externen Datenbank - unbekannter Verbindungsfehler."
 
-#: lib/util/TSUMDataHandler.php:178
+#: lib/util/TSUMDataHandler.php:256
 msgid "table"
 msgstr "Tabelle"
 
-#: lib/util/TSUMDataHandler.php:179
+#: lib/util/TSUMDataHandler.php:257
 msgid "empty"
 msgstr "Leer"
 
-#: lib/util/TSUMDataHandler.php:377
+#: lib/util/TSUMDataHandler.php:533
 msgid ""
 "Import file could not be deleted after reading for import while import "
 "propably succeed."
@@ -321,92 +333,92 @@ msgstr ""
 "Importdatei konnte nach dem einlesen nicht gelöscht werden. Der Import war "
 "aber trotzdem möglicherweise erfolgreich."
 
-#: lib/util/TSUMDataHandler.php:379
+#: lib/util/TSUMDataHandler.php:535
 msgid "Import file deleted."
 msgstr "Importdatei gelöscht."
 
-#: lib/util/TSUMDataHandler.php:438
+#: lib/util/TSUMDataHandler.php:593
 msgid "Something went wrong checking the table!"
 msgstr "Beim Prüfen der Tabelle ist etwas schiefgegangen!"
 
-#: lib/util/TSUMDataHandler.php:480
+#: lib/util/TSUMDataHandler.php:635
 msgid "Database table columns could not be updated!"
 msgstr "Spalten der Datenbanktabelle konnten nicht upgedated werden!"
 
-#: lib/util/TSUMDataHandler.php:484
+#: lib/util/TSUMDataHandler.php:639
 msgid "Backup of database table failed, update not possible!"
 msgstr ""
 "Backup der Datenbanktabelle ist fehlgeschlagen. Update ist nicht möglich!"
 
-#: lib/util/TSUMDataHandler.php:501
+#: lib/util/TSUMDataHandler.php:656
 msgid "No rows imported! Either file is empty or an error occured."
 msgstr ""
 "Keine Zeilen importiert! Entweder ist die Datei leer oder ein Fehler "
 "aufgetreten."
 
-#: lib/util/TSUMDataHandler.php:504
+#: lib/util/TSUMDataHandler.php:659
 msgid "Rows imported:"
 msgstr "Zeilen importiert:"
 
-#: lib/util/TSUMDataHandler.php:508
+#: lib/util/TSUMDataHandler.php:663
 msgid "Backup of database table failed, import was not possible!"
 msgstr ""
 "Backup der Datenbanktabelle ist fehlgeschlagen. Importvorgang ist nicht "
 "möglich!"
 
-#: lib/util/TSUMDataHandler.php:521
+#: lib/util/TSUMDataHandler.php:676
 msgid "General Status"
 msgstr "Allgemeiner Status"
 
-#: lib/util/TSUMDataHandler.php:525
+#: lib/util/TSUMDataHandler.php:680
 msgid "Parameters Table"
 msgstr "Parametertabelle"
 
-#: lib/util/TSUMDataHandler.php:545
+#: lib/util/TSUMDataHandler.php:700
 msgid "Connection Status"
 msgstr "Verbindungsstatus"
 
-#: lib/util/TSUMDataHandler.php:553
+#: lib/util/TSUMDataHandler.php:708
 msgid "Connection to external database established!"
 msgstr "Verbindung zu externer Datenbank hergestellt!"
 
-#: lib/util/TSUMDataHandler.php:556
+#: lib/util/TSUMDataHandler.php:711
 msgid "No connection to external database."
 msgstr "Keine Verbindung zur externen Datenbank."
 
-#: lib/util/TSUMDataHandler.php:563
+#: lib/util/TSUMDataHandler.php:718
 msgid "Status of Tables"
 msgstr "Status der Tabellen"
 
-#: lib/util/TSUMDataHandler.php:567
+#: lib/util/TSUMDataHandler.php:722
 msgid "Sections table"
 msgstr "IG-Tabelle"
 
-#: lib/util/TSUMDataHandler.php:572 lib/util/TSUMDataHandler.php:593
+#: lib/util/TSUMDataHandler.php:727 lib/util/TSUMDataHandler.php:748
 msgid "Existing"
 msgstr "Existierend"
 
-#: lib/util/TSUMDataHandler.php:575 lib/util/TSUMDataHandler.php:596
+#: lib/util/TSUMDataHandler.php:730 lib/util/TSUMDataHandler.php:751
 msgid "Missing"
 msgstr "Fehlend"
 
-#: lib/util/TSUMDataHandler.php:588
+#: lib/util/TSUMDataHandler.php:743
 msgid "Postcodes table"
 msgstr "Postleitzahlentabelle"
 
-#: lib/util/TSUMDataHandler.php:609
+#: lib/util/TSUMDataHandler.php:764
 msgid "CSV import directory"
 msgstr "CSV Import Verzeichnis"
 
-#: lib/util/TSUMDataHandler.php:620
+#: lib/util/TSUMDataHandler.php:775
 msgid "No CSV file found in directory."
 msgstr "Keine CSV-Datei im Verzeichnis gefunden."
 
-#: lib/util/TSUMDataHandler.php:622
+#: lib/util/TSUMDataHandler.php:777
 msgid "Files found in directory."
 msgstr "Dateien im Verzeichnis gefunden."
 
-#: lib/util/TSUMDataHandler.php:624
+#: lib/util/TSUMDataHandler.php:779
 msgid ""
 "If you press the \"import\"-button, data from the csv file stored at the "
 "import location of the plugin will be loaded into the according table. Only "
@@ -456,6 +468,13 @@ msgid ""
 msgstr ""
 "Map Connect Plugin, um bestimmte Seitendaten mit einer Frontend-"
 "Kartenanwendung über die WordPress REST API zu verbinden."
+
+#~ msgid ""
+#~ "Postcode output has been disabled in settings. Retrieving matching area "
+#~ "not possible."
+#~ msgstr ""
+#~ "Die Ausgabe von Postleitzahlen wurde in den Einstellungen deaktiviert. "
+#~ "Übereinstimmende Gebiete können nicht zurückgegeben werden."
 
 #~ msgid "Fileimport"
 #~ msgstr "Dateiimport"

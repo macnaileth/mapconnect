@@ -122,6 +122,75 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
       
     }
     /**
+     * tsumGetAreaByPcOrLocalityName( $PCLocality, $type = "POSTCODE")
+     * 
+     * @param string $PCLocality = postcode or locality name as string
+     * @param string $type = POSTCODE | LOCALITY -> Defines where to look up. Default: POSTCODE 
+     * @return array -> Area information as array for output via API
+     */
+    public function tsumGetAreaByPcOrLocalityName( $PCLocality, $type = "POSTCODE") {
+        
+        global $extdb;
+        
+        //check connection and connect $extdb if needed
+        $connect = $this->tsumConnectExternal( $this->tsumLoadConnectionParams() );
+        $AreaInfo = [];
+        
+        if( $connect === false ) {
+                $AreaInfo[ 'error' ] = esc_html__('Database connection failed - data could not be retrieved. Contact API Administrator if this persists.', 'tsu-mapconnect');            
+        } else {        
+            //TODO: change is_numeric to regex --> because it only works for german pcs or similar
+            if ( strtoupper( $type ) == "POSTCODE" && is_numeric( $PCLocality ) ){
+                //fetch information from DB
+                $pcRows = $extdb->get_results( $extdb->prepare( "SELECT * FROM events_ig_plz WHERE start = %s", $PCLocality ) );
+                
+                if( $extdb->last_error ) {
+                    $AreaInfo[ 'error' ] = esc_html__('Error while requesting data for', 'tsu-mapconnect') . ': ' . $PCLocality;
+                } else {
+                    //insert data to return array
+                    foreach ($pcRows as $pc) {
+                        
+                        //if we have multiple communities sharing the same postcode, build a comma-separated list.
+                        $name = empty( $AreaInfo['community']['name'] ) ? $pc->name : ',' . $pc->name;
+                        
+                        //query ig info
+                        $igInfo =  $extdb->get_results( $extdb->prepare( "SELECT * FROM events_igs WHERE id = %s", $pc->ig ) );
+                        $AreaInfo['dimb-ig'] = [];
+                        if( $extdb->last_error ) { 
+                            $AreaInfo[ 'error' ] = esc_html__('Error while requesting data for', 'tsu-mapconnect') . ': DIMB IG';
+                        } else {
+                            foreach ($igInfo as $ig) {
+                                $AreaInfo['dimb-ig'] = [
+                                    "id" => $ig->id,
+                                    "name" => $ig->name,
+                                    "contact" => $ig->mail,
+                                    "active" => $ig->aktiv == 1 ? true : false
+                                ];                              
+                            }
+                        }
+                        
+                        $AreaInfo['community'] = [
+                            "postcode" => $pc->start,
+                            "name" => $name,
+                            "district" => $pc->district,
+                            "federalstate" => $pc->federalState
+                        ];  
+                    }
+                    $AreaInfo['shared-entries'] = count( $pcRows );
+                    //TODO: handle "nameless" cases with -1
+                    
+                }
+                
+            } else if ( strtoupper( $type ) == "LOCALITY" ) {
+
+            } else {
+                $AreaInfo[ 'error' ] = esc_html__('No valid type (Postcode or Locality) set. Contact API Administrator if this persists.', 'tsu-mapconnect');
+            }
+        }
+        
+        return $AreaInfo;
+    }
+    /**
      * tsumCheckAreaExists( $areaname )
      * 
      * @param string $areaname = Name of the area

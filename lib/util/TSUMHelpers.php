@@ -117,4 +117,30 @@ class TSUMHelpers {
         return file_exists( $filename );
         
     }
+    /**
+     * tsumGetLocation ( $string, $country = 'de' )
+     * 
+     * retrieve place by plz using openplzapi.org s api. At the moment, it only works with postalcodes
+     * 
+     * @param string $string string containing the paramter, at the moment only a postal code is accepted
+     * @param string $country allows to change the country to look up. default: de
+     * @param string $array - default true - if array or stdClass should be returned
+     * @return array returns json object from retrieved data
+     */
+    public static function tsumGetLocation ( $string, $country = 'de', $queryparams = '&pageSize=50', $array = true ) {
+        
+        $reqURL = 'https://openplzapi.org/' . $country . '/Localities?postalCode=' . $string . $queryparams;
+
+        $json = file_get_contents($reqURL);
+        
+        $decoded = json_decode( $json, $array );
+
+        $location = [
+            'source' => 'https://openplzapi.org/',
+            'request' => $reqURL,
+            'data' => $decoded
+        ];
+
+        return $location;
+    }    
 }

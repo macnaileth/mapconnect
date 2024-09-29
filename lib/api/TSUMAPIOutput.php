@@ -92,8 +92,6 @@ class TSUMAPIOutput {
      * @return type
      */
     public function tsumAreaName( $data ) { 
-        //load string helpers here
-        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';
         
         //connect to database
         $connect = new \lib\util\TSUMDataHandler( isset( $this->settings['tsum_general_setting_db_table'] ) ? $this->settings['tsum_general_setting_db_table'] : '' );
@@ -172,10 +170,12 @@ class TSUMAPIOutput {
      * @return array returns an array to be sent to the REST API of WP
      */
     public function tsumAreaByPCode( $data ) {
+        //initalize db handler
+        $tsumDataHandler = new \lib\util\TSUMDataHandler( isset( $this->settings['tsum_general_setting_db_table'] ) ? $this->settings['tsum_general_setting_db_table'] : '' ); 
         
         //check if we should return postal codes at all TODO: USE STATIC HELPER
         if ( \lib\util\TSUMHelpers::tsumGetOptionByKey( $this->settings, "tsum_general_setting_pc_output", '1' ) === true ) {
-
+        
             //get the pages and return the needed params in API
             $pages = get_pages();
             $reqPostCode = $data['postcode'];
@@ -183,8 +183,9 @@ class TSUMAPIOutput {
             $response = [ 
                 'response' => \lib\util\TSUMMsgHandler::tsumAPIReturnMessage( $data['postcode'] ), 
                 'requested-pc' => $reqPostCode, 
-                'location' => $this->tsumGetLocation( $reqPostCode ), 
-                'match' => [] 
+                'location' => \lib\util\TSUMHelpers::tsumGetLocation( $reqPostCode ), 
+                'match' => [], 
+                'data-extent' => 'full'
                 ];
 
             foreach($pages as $page) {
@@ -203,8 +204,12 @@ class TSUMAPIOutput {
             return empty( $response['match'] ) ? array_push($response['response'], \lib\util\TSUMMsgHandler::tsumAPIReturnMessage($reqPostCode, 404) ) : $response;
             
         } else {
+            //TODO: Check database, then query openPLZ if needed
+            $areaData = $tsumDataHandler->tsumGetAreaByPcOrLocalityName( $data['postcode'] );
+            
             $response['response'] = \lib\util\TSUMMsgHandler::tsumAPIReturnMessage( $data['postcode'] );
-            $response['match'] = [ -1, esc_html__( 'Postcode output has been disabled in settings. Retrieving matching area not possible.', 'tsu-mapconnect' ) ];
+            $response['data-extent'] = 'reduced';
+            $response['match'] = $areaData;//\lib\util\TSUMHelpers::tsumGetLocation( $data['postcode'], 'de', '' );
             return $response;
         }
     }  
@@ -302,36 +307,5 @@ class TSUMAPIOutput {
         ];
 
         return $area;
-    }
-    /**
-     * tsumGetLocation ( $string, $country = 'de' )
-     * 
-     * retrieve place by plz using openplzapi.org s api. At the moment, it only works with postalcodes
-     * 
-     * @param string $string string containing the paramter, at the moment only a postal code is accepted
-     * @param string $country allows to change the country to look up. default: de
-     * @return array returns json object from retrieved data
-     */
-    private function tsumGetLocation ( $string, $country = 'de' ) {
-        
-        $reqURL = 'https://openplzapi.org/' . $country . '/Localities?postalCode=' . $string;
-        
-        if (is_numeric( $string )) {
-            //by postcode
-            $json = file_get_contents( $reqURL );
-            $decoded = json_decode($json);
-            
-            $location = [ 
-                'source' => 'https://openplzapi.org/', 
-                'request' => $reqURL, 
-                'data' => array_key_exists( 0, $decoded ) ? $decoded[0] : $decoded
-                ];
-            
-            return $location;
-        } else {
-            //TODO: Allow string search for locations later
-            return [ 'TODO' => 'Service under construction.' ];
-        }
-        
     }
 }
