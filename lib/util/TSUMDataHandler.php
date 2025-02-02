@@ -159,7 +159,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                         if( $extdb->last_error ) { 
                             $AreaInfo[ 'error' ] = esc_html__('Error while requesting data for', 'tsu-mapconnect') . ': DIMB IG';
                         } else {
-                            foreach ($igInfo as $ig) {
+                            foreach ($igInfo as $ig) {                               
                                 $AreaInfo['dimb-ig'] = [
                                     "id" => $ig->id,
                                     "name" => $ig->name,
@@ -168,17 +168,41 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                                 ];                              
                             }
                         }
-                        
+                        //TODO: handle "nameless" cases with -1
                         $AreaInfo['community'] = [
                             "postcode" => $pc->start,
                             "name" => $name,
                             "district" => $pc->district,
-                            "federalstate" => $pc->federalState
-                        ];  
+                            "federalState" => $pc->federalState
+                        ];
+                        $AreaInfo['updated'] = false;
+                        
+                        if($name === "-1") {
+                            //query data at openplz api
+                            $opPcRawData = \lib\util\TSUMHelpers::tsumGetLocation($pc->start);
+                            $opPcData = \lib\util\TSUMHelpers::tsumMergeLocalities($opPcRawData['data']);
+                            //reset area data
+                            $AreaInfo['community'] = [
+                                "postcode" => $pc->start,
+                                "name" => $opPcData["name"],
+                                "district" => $opPcData["district"]["name"],
+                                "federalState" => $opPcData["federalState"]["name"]
+                            ];  
+                            //rewrite db entry
+                            $queryString = $extdb->prepare(
+                                    "UPDATE events_ig_plz SET name = %s, district = %s, federalState = %s WHERE start = %s;",
+                                    $opPcData["name"], $opPcData["district"]["name"], $opPcData["federalState"]["name"], $pc->start
+                            );
+                            $query = $extdb->query( $queryString );
+                            
+                            if ( $query === false ) {
+                                $AreaInfo[ 'error' ] = esc_html__('Error updating database with data for community with postcode', 'tsu-mapconnect') . ': ' . $pc->start;                                
+                            }
+                            
+                            $AreaInfo['updated'] = true;
+                        }                        
                     }
                     $AreaInfo['shared-entries'] = count( $pcRows );
-                    //TODO: handle "nameless" cases with -1
-                    
                 }
                 
             } else if ( strtoupper( $type ) == "LOCALITY" ) {
@@ -354,7 +378,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 }
                 $arrForRegex = $formedArrForRegex; //overwrite array
                 
-                //TODO: make regex pattern shit - since openplz only supports 50 codes per request, we have to split
+                //make regex pattern shit - since openplz only supports 50 codes per request, we have to split
                 $queryString = '';
                 $reloadPCs = false;
                 foreach ($arrForRegex['apidata'] as $key) {
@@ -387,7 +411,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                     "postcode" => $pc->start,
                     "name" => $pc->name,
                     "district" => $pc->district,
-                    "federalstate" => $pc->federalState
+                    "federalState" => $pc->federalState
                         ] );
             } else {
                 array_push( $pcArray, $pc->start );

@@ -28,19 +28,90 @@ class TSUMMapplication {
         
         //for resetting, setup defaults
         $defaultParams = [ 
-            'metadata_url' => get_home_url() . '/wp-json/tsu-mapconnect/v1/area/name/', 
-            'base_url' => get_home_url(), 
-            'database_url' => '<DEFAULT>',
-            'colors' => []
+            'metadata_url' => get_home_url() . '/wp-json/tsu-mapconnect/v1/area/aname' /* unused at the moment 01.02.2025 */, 
+            'base_url' => 'https://dimb.api-spots.de', 
+            'api_url' => 'https://dimb.api-spots.de', 
+            'database_url' => '<DEFAULT>' /* unused at the moment 01.02.2025 */,
+            'feat_fill_rgb' => '0, 94, 169',
+            'feat_fill_alpha' => '0.3',
+            'feat_stroke_rgb' => '0, 94, 169',
+            'feat_stroke_width' => '2',
+            'feat_highlight_rgb' => '236, 102, 8',
+            'headline_rgb' => '80, 84, 86',
+            'text_rgb' => '52, 58, 64',            
+            'width' => '100%',
+            'height' => '400px',
+            'add_classes' => 'mapplication-app',
+            'debug' => '0'
             ];
 
         $MapParams = shortcode_atts( array (
             'metadata_url' => $defaultParams['metadata_url'],
             'base_url' => $defaultParams['base_url'],
+            'api_url' => $defaultParams['api_url'],
             'database_url' => $defaultParams['database_url'],
-            'colors' => $defaultParams['colors']
+            'feat_fill_rgb' => $defaultParams['feat_fill_rgb'],
+            'feat_fill_alpha' => $defaultParams['feat_fill_alpha'],
+            'feat_stroke_rgb' => $defaultParams['feat_stroke_rgb'],
+            'feat_stroke_width' => $defaultParams['feat_stroke_width'],
+            'feat_highlight_rgb' => $defaultParams['feat_highlight_rgb'],
+            'headline_rgb' => $defaultParams['headline_rgb'],
+            'text_rgb' => $defaultParams['text_rgb'],                  
+            'width' => $defaultParams['width'],
+            'height' => $defaultParams['height'],   
+            'add_classes' => $defaultParams['add_classes'],
+            'debug' => $defaultParams['debug']
         ), $atts );       
-        return $this->tsumMapInlineJS( $MapParams, $defaultParams ) . "\n";
+        
+        //inject needed config scripts to header
+        wp_register_script( 'tsu-mapplication-config', '' );
+        wp_enqueue_script( 'tsu-mapplication-config' );
+        wp_add_inline_script( 'tsu-mapplication-config', $this->tsumMapConfig( $MapParams ) );
+        
+        //create mapapp here
+        $appContainer = $this->tsumInjectMapContainer( $MapParams );
+        
+        return $appContainer . ( $MapParams['debug'] === '1' ? $this->tsumMapInlineJS( $MapParams, $defaultParams, true, true ) : '' ) . "\n";
+    }
+    /**
+     * function tsumInjectMapContainer( $params )
+     * 
+     * function to spawn js application with map inside of a container on the page.
+     * @param string $params = shortcode atts as parameters
+     * @return  string = returns the ready-to-use html code
+     */
+    private function tsumInjectMapContainer( $params ) {
+        
+        $html = '<div id="root"></div>';
+        $html .= '<script defer src="' . TSU_MC_PLUGIN_URL . "/app/main.js" . '"></script>';
+        
+	return '<div class="map-container" style="padding: 0; width: ' . $params['width'] . '; height: ' . $params['height'] . '; background: url(' . TSU_MC_PLUGIN_URL . '/data/images/preload-map.jpg) no-repeat center center / cover;">' . $html . '</div>';
+    }
+    
+    private function tsumMapConfig( $params ) {
+        
+        //set height simple numeric        
+        $sanitizedHeight = preg_replace("/[^0-9]/", "", $params['height'] );
+        
+        $configStr = "            window.mapconfig =   { 
+                                    style: {
+                                        featFillRGB: '". $params['feat_fill_rgb'] . "',
+                                        featFillAlpha: '". $params['feat_fill_alpha'] . "',
+                                        featStrokeRGB: '". $params['feat_stroke_rgb'] . "',
+                                        featStrokeWidth: '". $params['feat_stroke_width'] . "',
+                                        featHighlightRGB: '". $params['feat_highlight_rgb'] . "',
+                                        headlineRGB: '". $params['headline_rgb'] . "',
+                                        textRGB: '". $params['text_rgb'] . "'
+                                    }, 
+                                    paths: {
+                                        baseUrl: '" .  $params['base_url'] . "',
+                                        apiBaseUrl: '" .  $params['api_url'] . "',
+                                        plugin: '/dimb/wp-content/plugins/tsu-mapconnect' 
+                                    }, 
+                                    height: '" . $sanitizedHeight . "',
+                                    addClasses: '" . $params['add_classes'] . "'
+                                };";
+        return $configStr;
     }
     /**
      * tsumMapInlineJS( $params, $defaults )

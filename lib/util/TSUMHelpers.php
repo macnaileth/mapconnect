@@ -142,5 +142,33 @@ class TSUMHelpers {
         ];
 
         return $location;
-    }    
+    } 
+    /**
+     * tsumMergeLocalities ( $data )
+     * 
+     * merge array of localities together in form to be put into database
+     * works only with tsumGetAreaByPcOrLocalityName()!!!
+     * 
+     * @param type $data = JSON data retrieved from openplz
+     * @return array returns json object from retrieved data
+     */
+    public static function tsumMergeLocalities ( $data ) {
+
+        
+        $restructuredData = [];
+        $restructuredData['name'] = "";
+        $restructuredData['district'] = "";
+        $restructuredData['federalState'] = "";
+        
+        $entryCount = count( $data );
+        $restructuredData['pcSharingCommunities'] = $entryCount;
+        
+        foreach ($data as $entry) { 
+            $restructuredData['name'] = $restructuredData['name'] === "" ? $entry['name'] : $restructuredData['name'] . ", " . $entry['name'];
+            if( $restructuredData['district'] === "" ) { $restructuredData['district'] = $entry['district']; } 
+            if( $restructuredData['federalState'] === "" ) { $restructuredData['federalState'] = $entry['federalState']; } 
+        }
+
+        return $restructuredData;
+    }
 }
