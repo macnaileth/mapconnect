@@ -24,6 +24,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     //table names
     private $igTable = 'events_igs';
     private $pcTable = 'events_ig_plz';
+    private $simpleTable = 'mcon_ig_pc_table';
     
    /**
     * 
@@ -564,11 +565,14 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         while( ( $row = fgetcsv($file, 1000, ";") ) !== FALSE) {
             if( $rowCount > 0 ){
                 //Sanitize Data and add
-                $postCode = is_numeric( $row[0] ) ? $row[0] : false;
-                $accIG = is_numeric( $row[1] ) ? $row[1] : "";
+                $postCode = is_numeric( $row[2] ) ? $row[2] : false;
+                $accIG = is_numeric( $row[6] ) ? $row[6] : "";
+                $location = strip_tags( $row[5] );
+                $district = strip_tags( $row[4] );
+                $federalState = strip_tags( $row[1] );
                 
                 if ( $postCode !== false ) {
-                    $data[] = "('{$postCode}', -1, '{$accIG}')";
+                    $data[] = "('{$postCode}', -1, '{$accIG}', '{$location}', '{$district}', '{$federalState}')";
                 }
             }
             $rowCount++;
@@ -608,7 +612,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 
                 $insertDataString = implode(", ", $data); 
                 //do not have to use wordpress prepare function here, because values are already sanitized above
-                $insertQuery = "INSERT INTO " . $tableCSV . " (start, ende, ig) VALUES " . $insertDataString;
+                $insertQuery = "INSERT INTO " . $tableCSV . " (start, ende, ig, name, district, federalState) VALUES " . $insertDataString;
                 
                 $result = $extdb->query( $insertQuery );
                 
@@ -622,6 +626,48 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         }
         
         return $rowCount;
+    }
+    
+    //function for use with internal wp database
+    public function tsumPrintSimpleConnectionDataTable() {
+        
+        global $wpdb;
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        
+        $prefixedTable = $this->tsumPFX . $this->simpleTable;
+        $charset_collate = $wpdb->get_charset_collate();
+        $main_sql_create =  <<<COLUMNS
+                (
+                    `id` int(12) NOT NULL AUTO_INCREMENT,
+                    `bundesland` varchar(250),
+                    `plz` varchar(6) NOT NULL,
+                    `dimb_ig` varchar(100) NOT NULL,
+                    `landkreis` varchar(100), 
+                    `ort` varchar(100),
+                    `dimb_ig_id` int(12) NOT NULL,
+                    PRIMARY KEY (`id`)
+                )
+                COLUMNS;    
+        $checkCreateTable = maybe_create_table( $wpdb->prefix . $this->simpleTable, "CREATE TABLE {$prefixedTable} {$main_sql_create} {$charset_collate}" );
+        
+        ?>
+            <table class="widefat striped">
+                <tbody>
+                    <tr>
+                        <td><b><?php echo esc_html__('General Status', 'tsu-mapconnect'); ?></b></td>
+                        <td>&nbsp;</td>
+                    </tr>                    
+                    <tr>
+                        <td><?php echo esc_html__( 'WP internal table', 'tsu-mapconnect' );  ?></td>
+                        <td>
+                            <?php 
+                                echo $checkCreateTable === true ? $prefixedTable : esc_html__( 'DB Error: table could not be found or created', 'tsu-mapconnect' ); 
+                            ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <?php
     }
     
     public function tsumPrintConnectionDataTable() {
@@ -711,11 +757,11 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 add_settings_error( 'tsumMCOptions', '2', esc_html__( 'Backup of database table failed, import was not possible!', 'tsu-mapconnect' ) );
             }               
             
-            echo 'Table to import to: ' . $import_table . ' | ';
+            //echo 'Table to import to: ' . $import_table . ' | ';
             
         }
         
-        echo 'FILEIMPORT SET: IG: ' . $import[ parent::TSUM_TAB_IG_NAME ] . ' PLZ: ' . $import[ parent::TSUM_TAB_PC_NAME ];
+        //echo 'FILEIMPORT SET: IG: ' . $import[ parent::TSUM_TAB_IG_NAME ] . ' PLZ: ' . $import[ parent::TSUM_TAB_PC_NAME ];
         
         if ( !empty( $conParams ) ): ?> 
             <table class="widefat striped">

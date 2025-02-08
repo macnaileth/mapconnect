@@ -57,7 +57,12 @@ class TSUMSettings {
             <hr>
             <h2><?php echo esc_html__( 'Database connection overview', 'tsu-mapconnect' ); ?></h2>
             <?php 
-                $tsumDataHandler->tsumPrintConnectionDataTable();
+                if ( !isset( $options['tsum_general_setting_db_simple'] ) || $options['tsum_general_setting_db_simple'] !== '1' ) {
+                    $tsumDataHandler->tsumPrintConnectionDataTable();
+                }
+                else {
+                    $tsumDataHandler->tsumPrintSimpleConnectionDataTable();
+                }
             ?>
         </div>
         <?php
@@ -82,11 +87,18 @@ class TSUMSettings {
                 'tsum_general_settings' );
         
         add_settings_field( 
+                'tsum_general_setting_db_simple', 
+                esc_html__( 'use wordpress table instead of external database for postcode data', 'tsu-mapconnect' ), 
+                array( $this, 'tsumGenSettingsDBSimple' ), 
+                'tsu-mapconnect', 
+                'tsum_general_settings' );         
+        
+        add_settings_field( 
                 'tsum_general_setting_db_table', 
                 esc_html__( 'database table holding parameters', 'tsu-mapconnect' ), 
                 array( $this, 'tsumGenSettingsDBTable' ), 
                 'tsu-mapconnect', 
-                'tsum_general_settings' );   
+                'tsum_general_settings' );                   
             
     } 
     
@@ -101,6 +113,7 @@ class TSUMSettings {
                 
         $validate = [];
         $validate['pc'] = $input['tsum_general_setting_pc_output'] ?? null;
+        $validate['simplemode'] = $input['tsum_general_setting_db_simple'] ?? null;
         $validate['tablename'] = $input['tsum_general_setting_db_table'] ?? null;
         
         //validate boolean
@@ -113,6 +126,15 @@ class TSUMSettings {
                 $msg[0] = esc_html__( 'Setting for postcode output could not be validated. Resetted field to default value.', 'tsu-mapconnect' );
             }
         }
+        if ($validate['simplemode'] != null) {
+            if ( $input['tsum_general_setting_db_simple'] === '0' || $input['tsum_general_setting_db_simple'] === '1' ) {
+                $newinput['tsum_general_setting_db_simple'] = $input[ 'tsum_general_setting_db_simple' ];       
+            } else {
+                $newinput['tsum_general_setting_db_simple'] = '1';
+                $errors = true;
+                $msg[0] = esc_html__( 'Setting for simple database could not be validated. Resetted field to default value.', 'tsu-mapconnect' );
+            }
+        }        
         if ($validate['tablename'] != null) {
             //validate sql table name
             if ( preg_match($sql_table_pattern, $input['tsum_general_setting_db_table']) ) {
@@ -159,6 +181,19 @@ class TSUMSettings {
             /> 
         <?php        
     }
+
+    public function tsumGenSettingsDBSimple() {
+        $options = get_option( 'tsumMCOptions' );
+        ?> 
+            <input 
+                id='tsum_general_setting_db_simple' 
+                name='tsumMCOptions[tsum_general_setting_db_simple]' 
+                type='checkbox' 
+                value='1'
+                <?php checked( '1', $options['tsum_general_setting_db_simple'] ?? 0 ); ?>
+            /> 
+        <?php        
+    }    
     
     public function tsumGenSettingsDBTable() {
         

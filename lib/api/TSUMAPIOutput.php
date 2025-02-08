@@ -108,7 +108,7 @@ class TSUMAPIOutput {
             $exists = true;
         }        
  
-        $reqName = urldecode( \lib\util\TSUMHelpers::tsumConvertToUmlaute($data['areaname'], true) );
+        $reqName = urldecode( $data['areaname'] );
         
         //check for meta information on pages
         foreach($pages as $page) {
