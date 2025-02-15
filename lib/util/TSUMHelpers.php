@@ -22,7 +22,6 @@ class TSUMHelpers {
      * @return string Updated string
      */    
     public static function tsumConvertToUmlaute( $string, $convToWhitespace = false ) {     
-        
         $prepStr = $convToWhitespace == true ? str_replace( ['_', '+', '%20'], ' ', $string ) : $string;
         return str_replace( [ 'ae', 'Ae', 'oe', 'Oe', 'ue', 'Ue' ], [ 'ä', 'Ä', 'ö', 'Ö', 'ü', 'Ü' ], $prepStr );
         

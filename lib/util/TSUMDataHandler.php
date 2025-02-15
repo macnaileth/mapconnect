@@ -24,7 +24,6 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     //table names
     private $igTable = 'events_igs';
     private $pcTable = 'events_ig_plz';
-    private $simpleTable = 'mcon_ig_pc_table';
     
    /**
     * 
@@ -551,9 +550,14 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         return false;      
     }
     
-    private function tsumPerformCSVImport( $tableCSV, $delete = true ) {
+    private function tsumPerformCSVImport( $tableCSV, $delete = true, $useWPDB = false ) {
         
         global $extdb; 
+        
+        global $wpdb; //needed for local importing      
+        
+        $importDB = $useWPDB === false ? $extdb : $wpdb;
+        
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMMsgHandler.php';
            
         $file = fopen( TSU_MC_PLUGIN_PATH . 'data/csv/' . $tableCSV . '.csv', "r" );
@@ -565,14 +569,26 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         while( ( $row = fgetcsv($file, 1000, ";") ) !== FALSE) {
             if( $rowCount > 0 ){
                 //Sanitize Data and add
-                $postCode = is_numeric( $row[2] ) ? $row[2] : false;
-                $accIG = is_numeric( $row[6] ) ? $row[6] : "";
-                $location = strip_tags( $row[5] );
-                $district = strip_tags( $row[4] );
-                $federalState = strip_tags( $row[1] );
-                
-                if ( $postCode !== false ) {
-                    $data[] = "('{$postCode}', -1, '{$accIG}', '{$location}', '{$district}', '{$federalState}')";
+                if( $tableCSV === $this->pcTable ){
+                    $postCode = is_numeric( $row[2] ) ? $row[2] : false;
+                    $accIG = is_numeric( $row[6] ) ? $row[6] : "";
+                    $location = strip_tags( $row[5] );
+                    $district = strip_tags( $row[4] );
+                    $federalState = strip_tags( $row[1] );
+
+                    if ( $postCode !== false ) {
+                        $data[] = "('{$postCode}', -1, '{$accIG}', '{$location}', '{$district}', '{$federalState}')";
+                    }
+                } else if ( $tableCSV === $this->igTable ){
+                    $id = is_numeric( $row[0] ) ? $row[0] : false;
+                    $name = strip_tags( $row[1] );
+                    $mail = strip_tags( $row[2] );
+                    $aktiv = is_numeric( $row[3] ) ? $row[3] : "1";
+                    $sewobe = is_numeric( $row[4] ) ? $row[4] : "";
+                    
+                    if ( $id !== false ) {
+                        $data[] = "('{$id}', '{$name}', '{$mail}', '{$aktiv}', '{$sewobe}')";
+                    }                    
                 }
             }
             $rowCount++;
@@ -590,7 +606,11 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         //insert data into database at according columns. Truncate first
         $query = "TRUNCATE TABLE " . $tableCSV;
         
-        $result = $extdb->query( $query );
+        $result = true;
+        
+        if ( $delete === true ) {
+            $result = $importDB->query( $query );
+        }
         
         if ( $result === false ) {
             return false;
@@ -602,7 +622,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             if( $tableCSV === $this->pcTable ){
                 
                 $changeQuery = "ALTER TABLE " . $tableCSV . " MODIFY COLUMN start varchar(8)";
-                $result = $extdb->query( $changeQuery );                 
+                $result = $importDB->query( $changeQuery );                 
                 if ( $result === false ) {
                     return false;
                 }                
@@ -612,9 +632,17 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 
                 $insertDataString = implode(", ", $data); 
                 //do not have to use wordpress prepare function here, because values are already sanitized above
-                $insertQuery = "INSERT INTO " . $tableCSV . " (start, ende, ig, name, district, federalState) VALUES " . $insertDataString;
+                $columns = "";
+                if( $tableCSV === $this->pcTable ){ 
+                    $columns =  "start, ende, ig, name, district, federalState";  
+                }
+                if( $tableCSV === $this->igTable ){ 
+                    $columns =  "id, name, mail, aktiv, sewobe_id";  
+                }                
                 
-                $result = $extdb->query( $insertQuery );
+                $insertQuery = "INSERT INTO " . $tableCSV . " (" . $columns . ") VALUES " . $insertDataString;
+                
+                $result = $importDB->query( $insertQuery );
                 
                 if ( $result === false ) {
                     return false;
@@ -634,40 +662,84 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         global $wpdb;
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         
-        $prefixedTable = $this->tsumPFX . $this->simpleTable;
+        $pcTable = $this->tsumPFX . $this->pcTable; //postcode table
+        $igTable = $this->tsumPFX . $this->igTable; //ig table
         $charset_collate = $wpdb->get_charset_collate();
-        $main_sql_create =  <<<COLUMNS
+        $pc_sql_create =  <<<COLUMNS
                 (
                     `id` int(12) NOT NULL AUTO_INCREMENT,
-                    `bundesland` varchar(250),
-                    `plz` varchar(6) NOT NULL,
-                    `dimb_ig` varchar(100) NOT NULL,
-                    `landkreis` varchar(100), 
-                    `ort` varchar(100),
-                    `dimb_ig_id` int(12) NOT NULL,
+                    `ig` int(12) NOT NULL,
+                    `start` varchar(6) NOT NULL,
+                    `ende` varchar(6) NOT NULL,
+                    `name` varchar(100) NOT NULL,
+                    `district` varchar(100), 
+                    `federalState` varchar(100),
                     PRIMARY KEY (`id`)
                 )
-                COLUMNS;    
-        $checkCreateTable = maybe_create_table( $wpdb->prefix . $this->simpleTable, "CREATE TABLE {$prefixedTable} {$main_sql_create} {$charset_collate}" );
+                COLUMNS;   
         
+        $ig_sql_create =  <<<COLUMNS
+                (
+                    `id` int(12) NOT NULL AUTO_INCREMENT,
+                    `name` varchar(100) NOT NULL,
+                    `mail` varchar(100),
+                    `aktiv` tinyint(1) DEFAULT 1,
+                    `sewobe_id` text, 
+                    PRIMARY KEY (`id`)
+                )
+                COLUMNS;   
+        
+        $checkCreatePCTable = maybe_create_table( $wpdb->prefix . $this->pcTable, "CREATE TABLE {$pcTable} {$pc_sql_create} {$charset_collate}" );
+        $checkCreateIGTable = maybe_create_table( $wpdb->prefix . $this->igTable, "CREATE TABLE {$igTable} {$ig_sql_create} {$charset_collate}" );        
         ?>
             <table class="widefat striped">
                 <tbody>
                     <tr>
                         <td><b><?php echo esc_html__('General Status', 'tsu-mapconnect'); ?></b></td>
                         <td>&nbsp;</td>
+                        <td>&nbsp;</td>
                     </tr>                    
                     <tr>
-                        <td><?php echo esc_html__( 'WP internal table', 'tsu-mapconnect' );  ?></td>
-                        <td>
+                        <td style="vertical-align: middle;"><?php echo esc_html__('WP internal table', 'tsu-mapconnect') . ' - ' . esc_html__('Postcodes', 'tsu-mapconnect');  ?></td>
+                        <td style="vertical-align: middle;">
                             <?php 
-                                echo $checkCreateTable === true ? $prefixedTable : esc_html__( 'DB Error: table could not be found or created', 'tsu-mapconnect' ); 
+                                echo $checkCreatePCTable === true ? '&#9989; ' . $pcTable : esc_html__('DB Error: table could not be found or created', 'tsu-mapconnect') . ': ' . $pcTable; 
                             ?>
                         </td>
+                         <td style="vertical-align: middle;">
+                            <?php 
+                                if ( \lib\util\TSUMHelpers::tsumFileExists( TSU_MC_PLUGIN_PATH . 'data/csv/' . $this->pcTable . '.csv' ) ) {
+                                    $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_PC_NAME, 'import' );      
+                                }
+                            ?>
+                        </td>                        
                     </tr>
+                    <tr>
+                        <td style="vertical-align: middle;"><?php echo esc_html__('WP internal table', 'tsu-mapconnect') . ' - ' . esc_html__('IGs', 'tsu-mapconnect');  ?></td>
+                        <td style="vertical-align: middle;">
+                            <?php 
+                                echo $checkCreateIGTable === true ? '&#9989; ' . $igTable : esc_html__('DB Error: table could not be found or created', 'tsu-mapconnect') . ': ' . $igTable; 
+                            ?>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <?php 
+                                if ( \lib\util\TSUMHelpers::tsumFileExists( TSU_MC_PLUGIN_PATH . 'data/csv/' . $this->igTable . '.csv' ) ) {
+                                    $this->tsumRenderTableFormActionButton( parent::TSUM_TAB_IG_NAME, 'import' );      
+                                }
+                            ?>
+                        </td>                         
+                    </tr>  
+                    <tr>
+                        <td><?php echo esc_html__( 'CSV import directory', 'tsu-mapconnect' );  ?></td>
+                        <td>
+                            <?php 
+                                echo TSU_MC_PLUGIN_PATH . 'data/csv/';
+                            ?>                           
+                        </td>
+                    </tr>                     
                 </tbody>
             </table>
-        <?php
+        <?php $this->tsumRenderCSVFileInfoMsg(); 
     }
     
     public function tsumPrintConnectionDataTable() {
@@ -864,6 +936,14 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                     </tr>                     
                 </tbody>
             </table>
+            <?php $this->tsumRenderCSVFileInfoMsg(); ?>
+        <?php endif;
+    }
+    
+    private function tsumRenderCSVFileInfoMsg() {
+        //use helpers to check paths' existance
+        require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMHelpers.php';               
+        ?>
             <p>
                 <?php if ( \lib\util\TSUMHelpers::tsumIsDirEmpty( TSU_MC_PLUGIN_PATH . 'data/csv/' )): ?>
                     <div class="notice notice-info inline"><?php echo esc_html__( 'No CSV file found in directory.', 'tsu-mapconnect' ); ?></div>
@@ -873,8 +953,8 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                         <?php echo esc_html__('If you press the "import"-button, data from the csv file stored at the import location of the plugin will be loaded into the according table. Only do this if you are sure what you are doing. The files must be named correctly, e.g. event_ig_plz.csv or events_igs.csv.', 'tsu-mapconnect') ?>
                     </i>                    
                 <?php endif; ?>
-            </p>
-        <?php endif;
+            </p>            
+        <?php
     }
     
     //creates a form around a button to perform table ops. $type = 'update' || 'import'

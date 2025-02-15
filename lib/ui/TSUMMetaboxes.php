@@ -141,7 +141,8 @@ class TSUMMetaboxes {
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMCleanUp.php';
         
          if ( $this->boxType == 'PCAREA' ) {
-             
+            
+            
             if ( ! isset( $_POST['meta_fields_meta_box_nonce'] ) )
                     return;
             if ( ! wp_verify_nonce( $_POST['meta_fields_meta_box_nonce'], 'meta_fields_save_meta_box_data' ) )
@@ -151,6 +152,7 @@ class TSUMMetaboxes {
             if ( ! current_user_can( 'edit_post', $post_id ) )
                     return;
             //check set fields
+            /*
             if ( ! isset( $_POST['meta_fields_tsum_areaname'] ) )
                     return;
             if ( ! isset( $_POST['meta_fields_tsum_areapcs'] ) )
@@ -167,17 +169,21 @@ class TSUMMetaboxes {
                     return;
             if ( ! isset( $_POST['meta_fields_tsum_areasocmedia'] ) )
                     return;
+            */
             
             //TODO: server side check data
             $messages = [];
             //postcodes
-            $valPostCodes = \lib\util\TSUMCleanUp::tsumCleanPCString( $_POST['meta_fields_tsum_areapcs'] );
-            $valPostCodes[1] != '' && array_push( $messages, $valPostCodes[1] ); 
+            $valPostCodes = [];
+            if (isset( $_POST['meta_fields_tsum_areapcs'] )) {
+                $valPostCodes = \lib\util\TSUMCleanUp::tsumCleanPCString( $_POST['meta_fields_tsum_areapcs'] );
+                $valPostCodes[1] != '' && array_push( $messages, $valPostCodes[1] ); 
+            }
             
             //set data array
             $area = [ 
                         "name" => sanitize_text_field( $_POST['meta_fields_tsum_areaname'] ),
-                        "postcode" => sanitize_text_field( $valPostCodes[0] ),  
+                        "postcode" => isset( $valPostCodes[0] ) ? sanitize_text_field( $valPostCodes[0] ) : '',  
                         "logo" => sanitize_text_field( $_POST['meta_fields_tsum_arealogo'] ),
                         "desc" => sanitize_text_field( $_POST['meta_fields_tsum_areadesc'] ),
                         "contact" => sanitize_email( $_POST['meta_fields_tsum_areacontact'] ),

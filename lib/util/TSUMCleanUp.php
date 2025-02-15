@@ -24,34 +24,40 @@ class TSUMCleanUp {
      */
     public static function tsumCleanPCString ( $string, $length = 5 ) {
         
-        $pcArray = explode(',', self::tsumTrimCommaPlus( $string ) );
-        $cleanArr = [];
-        $notes = '';
-        $msg = esc_html__( 'Error with handling input according postcodes. Some data has been filtered out.', 'tsu-mapconnect' );
-        
-        foreach( $pcArray as $pcCode ) { 
-            
-            $valCode = trim($pcCode);
-            
-            if ( is_numeric( $valCode ) ){
-                if ( strlen( $valCode ) <= $length ) {
-                    //valid pc - append to string
-                    array_push($cleanArr, $valCode);
+        if ( isset( $string ) ) {
+
+            $pcArray = explode(',', self::tsumTrimCommaPlus( $string ) );
+            $cleanArr = [];
+            $notes = '';
+            $msg = esc_html__( 'Error with handling input according postcodes. Some data has been filtered out.', 'tsu-mapconnect' );
+
+            foreach( $pcArray as $pcCode ) { 
+
+                $valCode = trim($pcCode);
+
+                if ( is_numeric( $valCode ) ){
+                    if ( strlen( $valCode ) <= $length ) {
+                        //valid pc - append to string
+                        array_push($cleanArr, $valCode);
+                    }
+                    else {
+                        if ( $notes == '' ) {
+                            $notes = $msg;
+                        }
+                    }
                 }
                 else {
                     if ( $notes == '' ) {
                         $notes = $msg;
-                    }
+                    }                
                 }
             }
-            else {
-                if ( $notes == '' ) {
-                    $notes = $msg;
-                }                
-            }
+
+            return [ 0 => implode( ',', $cleanArr ), 1 => $notes ];
         }
         
-        return [ 0 => implode( ',', $cleanArr ), 1 => $notes ];
+        return [ 0 => '', 1 => '' ];
+        
     }
     /**
      * tsumTrimCommaPlus ( $string )

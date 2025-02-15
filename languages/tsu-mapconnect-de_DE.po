@@ -3,13 +3,13 @@
 # This file is distributed under the GNU General Public License v3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Blank WordPress Pot v1.0.0\n"
+"Project-Id-Version: TSU-MAPCONNECT\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2025-02-08 15:33+0100\n"
+"POT-Creation-Date: 2025-02-14 11:57+0100\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Marco Nagel <mac@tsu-nami.de>\n"
-"Language-Team: Your Team <translations@example.com>\n"
-"Language: de_DE\n"
+"Last-Translator: \n"
+"Language-Team: Marco Nagel\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,130 +22,34 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "X-Generator: Poedit 3.5\n"
 "X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: languages\n"
+"X-Poedit-SearchPath-2: lib\n"
+"X-Poedit-SearchPath-3: lib/util/TSUMDataHandler.php\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:88
-msgid "Settings"
-msgstr "Einstellungen"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:88
-msgid "Paths"
-msgstr "Pfade"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:92
-msgid "Base URL"
-msgstr "Basis-URL"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:95
-msgid ""
-"Set the URL to the API delivering the geoJSON data here. Default value: "
-"<DEFAULT>."
-msgstr "Die URL der API für GEOJSON einstellen. Standard: <DEFAULT>"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:101
-msgid "URL for Metadata"
-msgstr "URL für Metadaten"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:109
-msgid "URL for Database"
-msgstr "URL für die Datenbank"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:117
-msgid "URL string to plugin (to app dir)"
-msgstr "URL-Zeichenkette zum App-Verzeichnis des Plugins"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:124
-msgid ""
-"Warning: Only change values here if you know what you are doing. If changed "
-"by accident, you can reset the values to the defaults using the reset button "
-"below."
-msgstr ""
-"Achtung: Ändern Sie hier nur Werte, wenn Sie wissen, was Sie tun. Bei "
-"versehentlichen Änderungen können Sie die Werte auf ihre Standards "
-"zurücksetzen, wenn Sie den Reset-Button unten verwenden."
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:132
-msgid "Reset"
-msgstr "Reset"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:137
-msgid "Mapconnect Mapplication"
-msgstr "Mapconnect Mapplication"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:140
-msgid "Colours"
-msgstr "Farben"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:142
-msgid "Map feature fill"
-msgstr "Füllfarbe der Kartenfeatures"
-
-#: blocks/tsu-mapconnect-map-block/src/edit.js:153
-msgid "Styling options"
-msgstr "Styling Optionen"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:116
-msgid "Mapconnect Metadata block"
-msgstr "Mapconnect-Metadatenblock"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:121
-msgid "Area name"
-msgstr "Name des Gebiets"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:127 lib/ui/TSUMMetaboxes.php:83
-msgid "Area postcodes (comma-separated)"
-msgstr "Postleitzahlen (durch Kommas getrennt)"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:133
-msgid "Area link"
-msgstr "Link zur Webseite des Gebiets"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:141
-msgid "Contact email"
-msgstr "Kontakt E-Mail"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:147
-msgid "Area logo (numeric id or link)"
-msgstr "Bereichslogo (numerische ID oder Link)"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:153
-msgid "Activities (comma-separated)"
-msgstr "Aktivitäten (durch Kommas getrennt)"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:159
-#: lib/ui/TSUMMetaboxes.php:123
-msgid "Descriptive text"
-msgstr "Beschreibender Text"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:167
-msgid "Description of your area"
-msgstr "Beschreibung Ihrer Region"
-
-#: blocks/tsu-mapconnect-meta-block/src/edit.js:173
-msgid ""
-"This block is not rendered. It is only for storing metadata for your mapping "
-"needs which will be sent via the REST API."
-msgstr ""
-"Dieser Block wird nicht gerendert. Es dient nur zum Speichern von Metadaten "
-"für Ihre Mapping-Anforderungen, die über die REST-API gesendet werden."
-
-#: blocks/tsu-mapconnect-meta-block/src/render.php:2
-msgid "Map Connect Metadata – hello from a dynamic block!"
-msgstr "Map Connect Metadaten – Hallo aus einem dynamischen Block!"
+"X-Poedit-SearchPathExcluded-1: blocks/tsu-mapconnect-meta-block\n"
+"X-Poedit-SearchPathExcluded-2: blocks/tsu-mapconnect-map-block\n"
 
 #: lib/ui/TSUMMetaboxes.php:45
 msgid "MapConnect area box"
 msgstr "MapConnect Gebietsdatenbox"
 
 #: lib/ui/TSUMMetaboxes.php:76
+#, fuzzy
 msgid "Name of area"
-msgstr "Name des Gebiets"
+msgstr "Name des Bereichs"
+
+#: lib/ui/TSUMMetaboxes.php:83
+#, fuzzy
+msgid "Area postcodes (comma-separated)"
+msgstr "Postleitzahlen (kommagetrennt)"
 
 #: lib/ui/TSUMMetaboxes.php:90
+#, fuzzy
 msgid "Logo or other image"
 msgstr "Logo oder anderes Bild"
 
 #: lib/ui/TSUMMetaboxes.php:93
+#, fuzzy
 msgid "logo image"
 msgstr "Logo-Bild"
 
@@ -154,18 +58,25 @@ msgid "Contact email address"
 msgstr "Kontakt E-Mail Adresse"
 
 #: lib/ui/TSUMMetaboxes.php:105
+#, fuzzy
 msgid "Link to area webpage"
-msgstr "Link zur Webseite des Gebiets"
+msgstr "Link zur Webseite des Bereichs"
 
 #: lib/ui/TSUMMetaboxes.php:111
 msgid "Activities in area (comma-separated)"
 msgstr "Aktivitäten/Angebote im Gebiet (durch Kommas getrennt)"
 
 #: lib/ui/TSUMMetaboxes.php:117
+#, fuzzy
 msgid "Socialmedia presence"
-msgstr "Social-Media-Präsenzen"
+msgstr "Social-Media-Präsenz"
+
+#: lib/ui/TSUMMetaboxes.php:123
+msgid "Descriptive text"
+msgstr "Beschreibender Text"
 
 #: lib/ui/TSUMMetaboxes.php:129
+#, fuzzy
 msgid ""
 "You are currently using the Map Connect plugin with the Classic Editor "
 "plugin for WordPress. We strongly recommend using Gutenberg instead, since "
@@ -174,7 +85,7 @@ msgid ""
 msgstr ""
 "Sie verwenden derzeit das Map Connect-Plugin mit dem Classic Editor-Plugin "
 "für WordPress. Wir empfehlen dringend, stattdessen Gutenberg zu verwenden, "
-"da Classic Editor veraltet ist und wir ihn in naher Zukunft nicht mehr "
+"da der Classic Editor veraltet ist und wir ihn in naher Zukunft nicht mehr "
 "unterstützen werden."
 
 #: lib/ui/TSUMSettings.php:33 lib/ui/TSUMSettings.php:49
@@ -224,14 +135,16 @@ msgstr ""
 "werden. Feld wurde auf den Ausgangswert zurückgesetzt."
 
 #: lib/ui/TSUMSettings.php:135
+#, fuzzy
 msgid ""
 "Setting for simple database could not be validated. Resetted field to "
 "default value."
 msgstr ""
-"Einstellung für einfache Datenbank konnte nicht validiert werden. Das Feld "
-"wurde auf den Standardwert zurückgesetzt."
+"Die Einstellung für eine einfache Datenbank konnte nicht überprüft werden. "
+"Das Feld wurde auf den Standardwert zurückgesetzt."
 
 #: lib/ui/TSUMSettings.php:145
+#, fuzzy
 msgid "Inputted name of database table is not allowed."
 msgstr "Eingabe für Tabellenname nicht zulässig."
 
@@ -265,35 +178,36 @@ msgstr ""
 "die PLZ-Daten vorhält, enthält. Das angezeigte Präfix wird automatisch "
 "hinzugefügt."
 
-#: lib/util/TSUMCleanUp.php:30
+#: lib/util/TSUMCleanUp.php:32
+#, fuzzy
 msgid ""
 "Error with handling input according postcodes. Some data has been filtered "
 "out."
 msgstr ""
-"Fehler bei der Handhabung von Eingaben nach Postleitzahlen. Einige Daten "
+"Fehler bei der Behandlung von Eingaben nach Postleitzahlen. Einige Daten "
 "wurden herausgefiltert."
 
-#: lib/util/TSUMDataHandler.php:57
+#: lib/util/TSUMDataHandler.php:56 lib/util/langstrings_temp.php:4
 msgid "Table not found or defined. No connection established."
 msgstr "Tabelle nicht gefunden oder undefiniert. Keine Verbindung hergestellt."
 
-#: lib/util/TSUMDataHandler.php:67
+#: lib/util/TSUMDataHandler.php:66 lib/util/langstrings_temp.php:5
 msgid "Database Host"
 msgstr "Datenbankhost"
 
-#: lib/util/TSUMDataHandler.php:74
+#: lib/util/TSUMDataHandler.php:73
 msgid "Database Name"
 msgstr "Datenbankname"
 
-#: lib/util/TSUMDataHandler.php:81
+#: lib/util/TSUMDataHandler.php:80
 msgid "Database User"
 msgstr "Datenbankuser"
 
-#: lib/util/TSUMDataHandler.php:88
+#: lib/util/TSUMDataHandler.php:87
 msgid "Database Pass"
 msgstr "Datenbankpasswort"
 
-#: lib/util/TSUMDataHandler.php:141
+#: lib/util/TSUMDataHandler.php:140
 msgid ""
 "Database connection failed - data could not be retrieved. Contact API "
 "Administrator if this persists."
@@ -301,17 +215,19 @@ msgstr ""
 "Datenbankverbindung gescheitert - Daten konnten nicht geladen werden. Wenn "
 "dies erneut auftritt, ggf. API Administrator kontaktieren."
 
-#: lib/util/TSUMDataHandler.php:149 lib/util/TSUMDataHandler.php:161
+#: lib/util/TSUMDataHandler.php:148 lib/util/TSUMDataHandler.php:160
+#: lib/util/langstrings_temp.php:6
+#, fuzzy
 msgid "Error while requesting data for"
 msgstr "Fehler während der Anfrage nach Daten für"
 
-#: lib/util/TSUMDataHandler.php:200
+#: lib/util/TSUMDataHandler.php:199
 msgid "Error updating database with data for community with postcode"
 msgstr ""
 "Fehler beim Update der Datenbank mit Daten für die Gemeinde mit der "
 "Postleitzahl"
 
-#: lib/util/TSUMDataHandler.php:212
+#: lib/util/TSUMDataHandler.php:211
 msgid ""
 "No valid type (Postcode or Locality) set. Contact API Administrator if this "
 "persists."
@@ -319,33 +235,34 @@ msgstr ""
 "Kein zulässiger Abfragetyp (Postleitzahl oder Ort) gesetzt. Wenn dies erneut "
 "auftritt, ggf. API Administrator kontaktieren."
 
-#: lib/util/TSUMDataHandler.php:288
+#: lib/util/TSUMDataHandler.php:287
 msgid "Postcode output has been disabled in settings."
 msgstr "Die Ausgabe von Postleitzahlen wurde in den Einstellungen deaktiviert."
 
-#: lib/util/TSUMDataHandler.php:289
+#: lib/util/TSUMDataHandler.php:288
+#, fuzzy
 msgid "Parameter table for external connection not set or found"
 msgstr ""
 "Tabelle mit Parametern zur externen Verbindung nicht gefunden oder gesetzt"
 
-#: lib/util/TSUMDataHandler.php:290
+#: lib/util/TSUMDataHandler.php:289
 msgid "Connection impossible - No parameters for connection."
 msgstr "Verbindung. Nicht möglich - Keine Verbindungsparameter gefunden."
 
-#: lib/util/TSUMDataHandler.php:291
+#: lib/util/TSUMDataHandler.php:290
 msgid "Cannot connect to external database - unknown connection error."
 msgstr ""
 "Keine Verbindung zur externen Datenbank - unbekannter Verbindungsfehler."
 
-#: lib/util/TSUMDataHandler.php:305
+#: lib/util/TSUMDataHandler.php:304
 msgid "table"
 msgstr "Tabelle"
 
-#: lib/util/TSUMDataHandler.php:306
+#: lib/util/TSUMDataHandler.php:305
 msgid "empty"
 msgstr "Leer"
 
-#: lib/util/TSUMDataHandler.php:582
+#: lib/util/TSUMDataHandler.php:584
 msgid ""
 "Import file could not be deleted after reading for import while import "
 "propably succeed."
@@ -353,96 +270,107 @@ msgstr ""
 "Importdatei konnte nach dem einlesen nicht gelöscht werden. Der Import war "
 "aber trotzdem möglicherweise erfolgreich."
 
-#: lib/util/TSUMDataHandler.php:584
+#: lib/util/TSUMDataHandler.php:586
 msgid "Import file deleted."
 msgstr "Importdatei gelöscht."
 
-#: lib/util/TSUMDataHandler.php:637 lib/util/TSUMDataHandler.php:746
+#: lib/util/TSUMMsgHandler.php:22
+#, fuzzy
+msgid "Request successful. You requested data for:"
+msgstr "Anfrage erfolgreich. Sie haben Daten angefordert für:"
+
+#: lib/util/TSUMMsgHandler.php:28
+#, fuzzy
+msgid "Your request did not return any data. You requested data for:"
+msgstr ""
+"Ihre Anfrage hat keine Daten zurückgegeben. Sie haben Daten angefordert für:"
+
+#: lib/util/TSUMMsgHandler.php:34
+#, fuzzy
+msgid ""
+"The server you requested data from is not ready to handle your request. "
+"Probably server is overloaded or down for maintance:"
+msgstr ""
+"Der Server, von dem Sie Daten angefordert haben, ist nicht bereit, Ihre "
+"Anforderung zu verarbeiten. Wahrscheinlich ist der Server überlastet oder "
+"wegen Wartungsarbeiten ausgefallen:"
+
+#: lib/util/TSUMMsgHandler.php:40
+#, fuzzy
+msgid ""
+"Something went wrong with your request. Check again. If this keeps "
+"happening, contact the site admin:"
+msgstr ""
+"Bei Ihrer Anfrage ist etwas schief gelaufen. Überprüfen Sie es erneut. Wenn "
+"dies weiterhin der Fall ist, wenden Sie sich an den Site-Administrator:"
+
+#: lib/util/langstrings_temp.php:7
 msgid "General Status"
 msgstr "Allgemeiner Status"
 
-#: lib/util/TSUMDataHandler.php:641
-msgid "WP internal table"
-msgstr "WP-interne Tabelle"
-
-#: lib/util/TSUMDataHandler.php:663
-msgid "Something went wrong checking the table!"
-msgstr "Beim Prüfen der Tabelle ist etwas schiefgegangen!"
-
-#: lib/util/TSUMDataHandler.php:705
-msgid "Database table columns could not be updated!"
+#: lib/util/langstrings_temp.php:8 lib/util/langstrings_temp.php:11
+#, fuzzy
+#| msgid "Database table columns could not be updated!"
+msgid "DB Error: table could not be found or created"
 msgstr "Spalten der Datenbanktabelle konnten nicht upgedated werden!"
 
-#: lib/util/TSUMDataHandler.php:709
-msgid "Backup of database table failed, update not possible!"
-msgstr ""
-"Backup der Datenbanktabelle ist fehlgeschlagen. Update ist nicht möglich!"
-
-#: lib/util/TSUMDataHandler.php:726
-msgid "No rows imported! Either file is empty or an error occured."
-msgstr ""
-"Keine Zeilen importiert! Entweder ist die Datei leer oder ein Fehler "
-"aufgetreten."
-
-#: lib/util/TSUMDataHandler.php:729
-msgid "Rows imported:"
-msgstr "Zeilen importiert:"
-
-#: lib/util/TSUMDataHandler.php:733
-msgid "Backup of database table failed, import was not possible!"
-msgstr ""
-"Backup der Datenbanktabelle ist fehlgeschlagen. Importvorgang ist nicht "
-"möglich!"
-
-#: lib/util/TSUMDataHandler.php:750
-msgid "Parameters Table"
-msgstr "Parametertabelle"
-
-#: lib/util/TSUMDataHandler.php:770
-msgid "Connection Status"
-msgstr "Verbindungsstatus"
-
-#: lib/util/TSUMDataHandler.php:778
-msgid "Connection to external database established!"
-msgstr "Verbindung zu externer Datenbank hergestellt!"
-
-#: lib/util/TSUMDataHandler.php:781
-msgid "No connection to external database."
-msgstr "Keine Verbindung zur externen Datenbank."
-
-#: lib/util/TSUMDataHandler.php:788
-msgid "Status of Tables"
-msgstr "Status der Tabellen"
-
-#: lib/util/TSUMDataHandler.php:792
-msgid "Sections table"
-msgstr "IG-Tabelle"
-
-#: lib/util/TSUMDataHandler.php:797 lib/util/TSUMDataHandler.php:818
-msgid "Existing"
-msgstr "Existierend"
-
-#: lib/util/TSUMDataHandler.php:800 lib/util/TSUMDataHandler.php:821
-msgid "Missing"
-msgstr "Fehlend"
-
-#: lib/util/TSUMDataHandler.php:813
-msgid "Postcodes table"
+#: lib/util/langstrings_temp.php:9
+#, fuzzy
+#| msgid "Postcodes table"
+msgid "Postcodes"
 msgstr "Postleitzahlentabelle"
 
-#: lib/util/TSUMDataHandler.php:834
+#: lib/util/langstrings_temp.php:10
+msgid "IGs"
+msgstr "IGs"
+
+#: lib/util/langstrings_temp.php:12
 msgid "CSV import directory"
 msgstr "CSV Import Verzeichnis"
 
-#: lib/util/TSUMDataHandler.php:845
+#: lib/util/langstrings_temp.php:13
+msgid "WP internal table"
+msgstr "WP-interne Tabelle"
+
+#: lib/util/langstrings_temp.php:14
+msgid "Status of Tables"
+msgstr "Status der Tabellen"
+
+#: lib/util/langstrings_temp.php:15
+msgid "Sections table"
+msgstr "IG-Tabelle"
+
+#: lib/util/langstrings_temp.php:16
+msgid "Existing"
+msgstr "Existierend"
+
+#: lib/util/langstrings_temp.php:17
+msgid "Connection Status"
+msgstr "Verbindungsstatus"
+
+#: lib/util/langstrings_temp.php:18
+msgid "Connection to external database established!"
+msgstr "Verbindung zu externer Datenbank hergestellt!"
+
+#: lib/util/langstrings_temp.php:19
+msgid "Missing"
+msgstr "Fehlend"
+
+#: lib/util/langstrings_temp.php:20
+#, fuzzy
+#| msgid "Postcodes table"
+msgid "Postcodes table"
+msgstr "Postleitzahlentabelle"
+
+#: lib/util/langstrings_temp.php:21
 msgid "No CSV file found in directory."
 msgstr "Keine CSV-Datei im Verzeichnis gefunden."
 
-#: lib/util/TSUMDataHandler.php:847
+#: lib/util/langstrings_temp.php:22
 msgid "Files found in directory."
 msgstr "Dateien im Verzeichnis gefunden."
 
-#: lib/util/TSUMDataHandler.php:849
+#: lib/util/langstrings_temp.php:23
 msgid ""
 "If you press the \"import\"-button, data from the csv file stored at the "
 "import location of the plugin will be loaded into the according table. Only "
@@ -455,32 +383,6 @@ msgstr ""
 "ist, was man da tut. Zu importierende Dateien müssen korrekt benannt werden "
 "- entweder event_ig_plz.csv oder events_igs.csv."
 
-#: lib/util/TSUMMsgHandler.php:22
-msgid "Request successful. You requested data for:"
-msgstr "Anfrage erfolgreich. Sie haben Daten angefordert für:"
-
-#: lib/util/TSUMMsgHandler.php:28
-msgid "Your request did not return any data. You requested data for:"
-msgstr ""
-"Ihre Anfrage hat keine Daten zurückgegeben. Sie haben Daten angefordert für:"
-
-#: lib/util/TSUMMsgHandler.php:34
-msgid ""
-"The server you requested data from is not ready to handle your request. "
-"Probably server is overloaded or down for maintance:"
-msgstr ""
-"Der Server, von dem Sie Daten angefordert haben, ist nicht bereit, Ihre "
-"Anfrage zu bearbeiten. Wahrscheinlich ist der Server überlastet oder wegen "
-"Wartungsarbeiten ausgefallen:"
-
-#: lib/util/TSUMMsgHandler.php:40
-msgid ""
-"Something went wrong with your request. Check again. If this keeps "
-"happening, contact the site admin:"
-msgstr ""
-"Bei Ihrer Anfrage ist etwas schief gelaufen. Überprüfen Sie es erneut. Wenn "
-"dies weiterhin der Fall ist, wenden Sie sich an den Site-Administrator:"
-
 #: tsu-mapconnect.php:14
 msgid "Map Connect"
 msgstr "Map Connect"
@@ -492,6 +394,111 @@ msgid ""
 msgstr ""
 "Map Connect Plugin, um bestimmte Seitendaten mit einer Frontend-"
 "Kartenanwendung über die WordPress REST API zu verbinden."
+
+#~ msgid "Settings"
+#~ msgstr "Einstellungen"
+
+#~ msgid "Paths"
+#~ msgstr "Pfade"
+
+#~ msgid "Base URL"
+#~ msgstr "Basis-URL"
+
+#~ msgid ""
+#~ "Set the URL to the API delivering the geoJSON data here. Default value: "
+#~ "<DEFAULT>."
+#~ msgstr "Die URL der API für GEOJSON einstellen. Standard: <DEFAULT>"
+
+#~ msgid "URL for Metadata"
+#~ msgstr "URL für Metadaten"
+
+#~ msgid "URL for Database"
+#~ msgstr "URL für die Datenbank"
+
+#~ msgid "URL string to plugin (to app dir)"
+#~ msgstr "URL-Zeichenkette zum App-Verzeichnis des Plugins"
+
+#~ msgid ""
+#~ "Warning: Only change values here if you know what you are doing. If "
+#~ "changed by accident, you can reset the values to the defaults using the "
+#~ "reset button below."
+#~ msgstr ""
+#~ "Achtung: Ändern Sie hier nur Werte, wenn Sie wissen, was Sie tun. Bei "
+#~ "versehentlichen Änderungen können Sie die Werte auf ihre Standards "
+#~ "zurücksetzen, wenn Sie den Reset-Button unten verwenden."
+
+#~ msgid "Reset"
+#~ msgstr "Reset"
+
+#~ msgid "Mapconnect Mapplication"
+#~ msgstr "Mapconnect Mapplication"
+
+#~ msgid "Colours"
+#~ msgstr "Farben"
+
+#~ msgid "Map feature fill"
+#~ msgstr "Füllfarbe der Kartenfeatures"
+
+#~ msgid "Styling options"
+#~ msgstr "Styling Optionen"
+
+#~ msgid "Mapconnect Metadata block"
+#~ msgstr "Mapconnect-Metadatenblock"
+
+#~ msgid "Area name"
+#~ msgstr "Name des Gebiets"
+
+#~ msgid "Area link"
+#~ msgstr "Link zur Webseite des Gebiets"
+
+#~ msgid "Contact email"
+#~ msgstr "Kontakt E-Mail"
+
+#~ msgid "Area logo (numeric id or link)"
+#~ msgstr "Bereichslogo (numerische ID oder Link)"
+
+#~ msgid "Activities (comma-separated)"
+#~ msgstr "Aktivitäten (durch Kommas getrennt)"
+
+#~ msgid "Description of your area"
+#~ msgstr "Beschreibung Ihrer Region"
+
+#~ msgid ""
+#~ "This block is not rendered. It is only for storing metadata for your "
+#~ "mapping needs which will be sent via the REST API."
+#~ msgstr ""
+#~ "Dieser Block wird nicht gerendert. Es dient nur zum Speichern von "
+#~ "Metadaten für Ihre Mapping-Anforderungen, die über die REST-API gesendet "
+#~ "werden."
+
+#~ msgid "Map Connect Metadata – hello from a dynamic block!"
+#~ msgstr "Map Connect Metadaten – Hallo aus einem dynamischen Block!"
+
+#~ msgid "Something went wrong checking the table!"
+#~ msgstr "Beim Prüfen der Tabelle ist etwas schiefgegangen!"
+
+#~ msgid "Backup of database table failed, update not possible!"
+#~ msgstr ""
+#~ "Backup der Datenbanktabelle ist fehlgeschlagen. Update ist nicht möglich!"
+
+#~ msgid "No rows imported! Either file is empty or an error occured."
+#~ msgstr ""
+#~ "Keine Zeilen importiert! Entweder ist die Datei leer oder ein Fehler "
+#~ "aufgetreten."
+
+#~ msgid "Rows imported:"
+#~ msgstr "Zeilen importiert:"
+
+#~ msgid "Backup of database table failed, import was not possible!"
+#~ msgstr ""
+#~ "Backup der Datenbanktabelle ist fehlgeschlagen. Importvorgang ist nicht "
+#~ "möglich!"
+
+#~ msgid "Parameters Table"
+#~ msgstr "Parametertabelle"
+
+#~ msgid "No connection to external database."
+#~ msgstr "Keine Verbindung zur externen Datenbank."
 
 #~ msgid ""
 #~ "Postcode output has been disabled in settings. Retrieving matching area "

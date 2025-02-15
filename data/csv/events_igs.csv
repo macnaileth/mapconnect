@@ -1,0 +1,83 @@
+id;name;mail;aktiv;sewobe_id
+1;DIMB IG Thüringen;ig.thueringen@dimb.de;1;00004
+2;DIMB IG Fünf-Seen-Land;ig.ammersee@dimb.de;1;00001
+3;5 - Bremen;office@dimb.de;0;10382
+4;DIMB IG Chemnitz;ig.chemnitz@dimb.de;1;00002
+5;DIMB IG Dresden;ig.dresden@dimb.de;1;00006
+6;5 - Hamburg;office@dimb.de;0;NULL
+7;DIMB IG München und Umland;ig.muenchen@dimb.de;1;00003
+8;DIMB IG Moseleifel;ig.moseleifel@dimb.de;1;00008
+9;DIMB IG Nordschwarzwald;ig.nordschwarzwald@dimb.de;1;00013
+11;DIMB IG Odenwald;ig.odenwald@dimb.de;1;00015
+12;DIMB IG Hessischer Spessart;ig.hessischerspessart@dimb.de;1;00026
+13;DIMB IG Pfalz;ig.pfalz@dimb.de;1;00014
+14;DIMB IG Rhein-Nahe;ig.rhein-nahe@dimb.de;0;00009
+15;DIMB IG Rhein-Sieg;ig.rhein-sieg@dimb.de;1;00017
+16;DIMB IG Saar;ig.saar@dimb.de;1;00021
+17;DIMB IG Südschwarzwald;ig.suedschwarzwald@dimb.de;1;00011
+18;5 - Schleswig-Holstein;office@dimb.de;0;NULL
+19;DIMB IG Stauferland;ig.stauferland@dimb.de;1;00010
+20;DIMB IG Stuttgart;ig.stuttgart@dimb.de;1;00012
+21;DIMB IG Taunus;ig.taunus@dimb.de;1;00005
+22;DIMB IG Sauerland;ig.sauerland@dimb.de;1;00028
+23;DIMB IG Erlangen;ig.erlangen@dimb.de;1;00025
+25;DIMB IG Ostwürttemberg;ig.ostwuerttemberg@dimb.de;1;00027
+27;DIMB IG Bayerische Voralpen;ig.bayerischevoralpen@dimb.de;1;00024
+28;DIMB IG Chiemgau u BGL;ig.chbgl@dimb.de;1;00030
+29;DIMB IG Alb-Neckar-Donau;ig.albdonauneckar@dimb.de;1;00034
+30;DIMB IG Altmühltal;ig.altmuehltal@dimb.de;1;00029
+32;DIMB IG Bodensee;ig.bodensee@dimb.de;1;00032
+33;0 Test bitte nicht nutzen;office@dimb.de;1;00000
+34;DIMB IG Köln;ig.koeln@dimb.de;1;00033
+39;DIMB IG Osnabrücker Land;igosnabrueckerland@gmail.com;1;00039
+41;DIMB IG Harz;ig.harz@dimb.de;1;00019
+44;DIMB IG Allgäu;ig.allgaeu@dimb.de;1;00038
+45;DIMB IG Kassel;ig.kassel@dimb.de;1;00037
+46;Test;office@dimb.de;1;00040
+47;DIMB IG Regensburg;office@dimb.de;1;00042
+51;DIMB IG Nürnberg-Fürth;ig.nuernbergfuerth@dimb.de;1;00041
+54;DIMB IG Oberfranken;office@dimb.de;1;00045
+58;DIMB IG Schwarzwald Mitte;ig.schwarzwaldmitte@dimb.de;1;00061
+65;Intern - Bodensee (BW);office@dimb.de;0;02031
+66;Intern - Odenwald (BW);office@dimb.de;0;01234
+68;DIMB IG Rems-Murr;Office@dimb.de;1;00060
+69;DIMB IG Würzburg;ig.wuerzburg@dimb.de;1;00063
+70;0 Taubenberg/Miesbach;office@dimb.de;0;NULL
+71;Intern - Bodensee (BY);office@dimb.de;0;02031
+72;DIMB IG Untermain;ig.untermain@dimb.de;1;00065
+73;0 Schwäbisch-Hall;Office@dimb.de;0;NULL
+74;DIMB IG Reutlingen-Tübingen;ig.reutlingen@dimb.de;1;00072
+75;DIMB IG Test;office@dimb.de;1;00040
+76;DIMB IG Bayerischer Wald;ig.bayerischerwald@dimb.de;1;00066
+77;DIMB IG Nürnberger Land;ig.nuernbergerland@dimb.de;1;00067
+78;DIMB IG Hohenlohe;ig.hohenlohe@dimb.de;1;00075
+79;DIMB IG Ruhrgebiet;ig.ruhrgebiet@dimb.de;1;00064
+80;DIMB IG Schweinfurt-Haßberge;ig.schweinfurt-hassberge@dimb.de;1;00068
+81;DIMB IG Stoapfalz;ig.stoapfalz@dimb.de;1;00071
+82;DIMB IG Teutoburger Wald;ig.teutoburgerwald@dimb.de;1;00069
+83;DIMB IG Zugspitz-Pfaffenwinkl;ig.zugspitz-pfaffenwinkl@dimb.de;1;00074
+85;DIMB IG Bremen;ig.bremen@dimb.de;0;00022
+86;DIMB IG Duisburg;ig.duisburg@dimb.de;0;00018
+87;DIMB IG Hamburg;ig.hamburg@dimb.de;0;00007
+88;DIMB IG Koblenz;ig.koblenz@dimb.de;1;00031
+89;DIMB IG Leipzig;ig.leipzig@dimb.de;1;00076
+90;DIMB IG Nördliches Harzvorland;ig.harzvorland@dimb.de;0;00070
+91;DIMB IG Oldenburg;ig.oldenburg@dimb.de;0;00036
+92;DIMB IG Osthessen;ig.osthessen@dimb.de;0;00016
+93;DIMB IG Schleswig-Holstein;ig.schleswig-holstein@dimb.de;0;00023
+94;DIMB IG Stromberg;ig.stromberg@dimb.de;0;00020
+95;DIMB IG Unterfranken;ig.unterfranken@dimb.de;0;00047
+96;DIMB IG Region Leipzig;office@dimb.de;0;02055
+97;DIMB IG Alb-Donau-Iller;ig.albdonauiller@dimb.de;1;00077
+98;DIMB IG Wiesbaden;ig.wiesbaden@dimb.de;1;00079
+99;DIMB IG Kelheim;ig.kelheim@dimb.de;1;00081
+100;DIMB IG Rureifel;ig.rureifel@dimb.de;1;00080
+101;DIMB IG Jena;ig.jena@dimb.de;1;00085
+102;DIMB IG Mansfelder Land;ig.mansfelderland@dimb.de;1;00092
+103;DIMB IG Thüringer Meer;ig.thueringermeer@dimb.de;1;00090
+104;DIMB IG Hunsrück-Nahe;ig.hunsrueck-nahe@dimb.de;1;00091
+105;DIMB IG Alb-Donau-Neckar; thomas.lutz@dimb.de;1;NULL
+109;DIMB IG Berlin;benjamin.bohlmann@dimb.de;1;NULL
+110;DIMB IG Eggegebirge;ig.eggegebirge@dimb.de;1;NULL
+111;DIMB IG Erft;dennis.mueller@dimb.de;1;NULL
+113;DIMB IG Saarland;till.dengel@dimb.de;1;NULL
