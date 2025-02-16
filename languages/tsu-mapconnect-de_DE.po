@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TSU-MAPCONNECT\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2025-02-14 11:57+0100\n"
+"POT-Creation-Date: 2025-02-16 16:20+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Marco Nagel\n"
@@ -235,34 +235,34 @@ msgstr ""
 "Kein zulässiger Abfragetyp (Postleitzahl oder Ort) gesetzt. Wenn dies erneut "
 "auftritt, ggf. API Administrator kontaktieren."
 
-#: lib/util/TSUMDataHandler.php:287
+#: lib/util/TSUMDataHandler.php:329
 msgid "Postcode output has been disabled in settings."
 msgstr "Die Ausgabe von Postleitzahlen wurde in den Einstellungen deaktiviert."
 
-#: lib/util/TSUMDataHandler.php:288
+#: lib/util/TSUMDataHandler.php:330
 #, fuzzy
 msgid "Parameter table for external connection not set or found"
 msgstr ""
 "Tabelle mit Parametern zur externen Verbindung nicht gefunden oder gesetzt"
 
-#: lib/util/TSUMDataHandler.php:289
+#: lib/util/TSUMDataHandler.php:331
 msgid "Connection impossible - No parameters for connection."
 msgstr "Verbindung. Nicht möglich - Keine Verbindungsparameter gefunden."
 
-#: lib/util/TSUMDataHandler.php:290
+#: lib/util/TSUMDataHandler.php:332
 msgid "Cannot connect to external database - unknown connection error."
 msgstr ""
 "Keine Verbindung zur externen Datenbank - unbekannter Verbindungsfehler."
 
-#: lib/util/TSUMDataHandler.php:304
+#: lib/util/TSUMDataHandler.php:346
 msgid "table"
 msgstr "Tabelle"
 
-#: lib/util/TSUMDataHandler.php:305
+#: lib/util/TSUMDataHandler.php:347
 msgid "empty"
 msgstr "Leer"
 
-#: lib/util/TSUMDataHandler.php:584
+#: lib/util/TSUMDataHandler.php:647
 msgid ""
 "Import file could not be deleted after reading for import while import "
 "propably succeed."
@@ -270,7 +270,7 @@ msgstr ""
 "Importdatei konnte nach dem einlesen nicht gelöscht werden. Der Import war "
 "aber trotzdem möglicherweise erfolgreich."
 
-#: lib/util/TSUMDataHandler.php:586
+#: lib/util/TSUMDataHandler.php:649
 msgid "Import file deleted."
 msgstr "Importdatei gelöscht."
 
@@ -371,6 +371,16 @@ msgid "Files found in directory."
 msgstr "Dateien im Verzeichnis gefunden."
 
 #: lib/util/langstrings_temp.php:23
+msgid "Rows imported:"
+msgstr "Zeilen importiert:"
+
+#: lib/util/langstrings_temp.php:24
+msgid "No rows imported! Either file is empty or an error occured."
+msgstr ""
+"Keine Zeilen importiert! Entweder ist die Datei leer oder ein Fehler "
+"aufgetreten."
+
+#: lib/util/langstrings_temp.php:25
 msgid ""
 "If you press the \"import\"-button, data from the csv file stored at the "
 "import location of the plugin will be loaded into the according table. Only "
@@ -480,14 +490,6 @@ msgstr ""
 #~ msgid "Backup of database table failed, update not possible!"
 #~ msgstr ""
 #~ "Backup der Datenbanktabelle ist fehlgeschlagen. Update ist nicht möglich!"
-
-#~ msgid "No rows imported! Either file is empty or an error occured."
-#~ msgstr ""
-#~ "Keine Zeilen importiert! Entweder ist die Datei leer oder ein Fehler "
-#~ "aufgetreten."
-
-#~ msgid "Rows imported:"
-#~ msgstr "Zeilen importiert:"
 
 #~ msgid "Backup of database table failed, import was not possible!"
 #~ msgstr ""

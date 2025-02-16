@@ -20,5 +20,7 @@ esc_html__('Missing', 'tsu-mapconnect');
 esc_html__('Postcodes table', 'tsu-mapconnect');
 esc_html__( 'No CSV file found in directory.', 'tsu-mapconnect' );
 esc_html__( 'Files found in directory.', 'tsu-mapconnect' );
+esc_html__('Rows imported:', 'tsu-mapconnect');
+esc_html__( 'No rows imported! Either file is empty or an error occured.', 'tsu-mapconnect' );
 esc_html__('If you press the "import"-button, data from the csv file stored at the import location of the plugin will be loaded into the according table. Only do this if you are sure what you are doing. The files must be named correctly, e.g. event_ig_plz.csv or events_igs.csv.', 'tsu-mapconnect');
 

@@ -23,7 +23,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     
     //table names
     private $igTable = 'events_igs';
-    private $pcTable = 'events_ig_plz';
+    private $pcTable = 'events_ig_plz';   
     
    /**
     * 
@@ -37,26 +37,31 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         $this->tsumWPDB = $wpdb;
         $this->tsumParamTable = $table;
         $this->tsumParams = $params;
-        $this->tsumPFX = $wpdb->prefix;
+        $this->tsumPFX = $wpdb->prefix;  
     }
     
     private function tsumLoadConnectionParams() {
         
         $prefixedTable = $this->tsumPFX . $this->tsumParamTable;
-               
-        $paramData = $this->tsumWPDB->get_results( "SELECT parameter, value FROM $prefixedTable" );   
+        
+        $paramData = null;
+        
+        if (!empty ($this->tsumParamTable)) { 
+            $paramData = $this->tsumWPDB->get_results( "SELECT parameter, value FROM $prefixedTable" ); 
+        }
         
         $paramArray = [];
         
         if ( $paramData === null ) {
-            
-            add_settings_error( 
-                        'tsumMCOptions', 
-                        'db_table_not_found', 
-                        esc_html__( 'Table not found or defined. No connection established.', 'tsu-mapconnect' ) 
-                    ); 
-            
-            
+            //if local/internal wpdb, this is not an error.
+            if( $this->tsumIsLocal() === false ) {
+                
+                add_settings_error( 
+                            'tsumMCOptions', 
+                            'db_table_not_found', 
+                            esc_html__( 'Table not found or defined. No connection established.', 'tsu-mapconnect' ) 
+                        ); 
+            }     
         } else {
                 foreach ($paramData as $param) {
 
@@ -131,9 +136,24 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     public function tsumGetAreaByPcOrLocalityName( $PCLocality, $type = "POSTCODE") {
         
         global $extdb;
+        global $wpdb;
         
+        $isLocal = $this->tsumIsLocal();
+        $pcTable = $this->pcTable;
+        $igTable = $this->igTable;
+        
+        $db = $isLocal === true ? $wpdb : $extdb;
         //check connection and connect $extdb if needed
-        $connect = $this->tsumConnectExternal( $this->tsumLoadConnectionParams() );
+        $connect = false;
+        //check connection and connect $extdb if needed, also set table
+        if ( $isLocal === false ) {
+            $connect = $this->tsumConnectExternal( $this->tsumLoadConnectionParams() );
+        } else if( $isLocal === true ) {
+            $connect = true;
+            $pcTable = $this->tsumPFX . $pcTable;
+            $igTable = $this->tsumPFX . $igTable;
+        }  
+
         $AreaInfo = [];
         
         if( $connect === false ) {
@@ -142,9 +162,9 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             //TODO: change is_numeric to regex --> because it only works for german pcs or similar
             if ( strtoupper( $type ) == "POSTCODE" && is_numeric( $PCLocality ) ){
                 //fetch information from DB
-                $pcRows = $extdb->get_results( $extdb->prepare( "SELECT * FROM events_ig_plz WHERE start = %s", $PCLocality ) );
+                $pcRows = $db->get_results( $db->prepare( "SELECT * FROM " . $pcTable . " WHERE start = %s", $PCLocality ) );
                 
-                if( $extdb->last_error ) {
+                if( $db->last_error ) {
                     $AreaInfo[ 'error' ] = esc_html__('Error while requesting data for', 'tsu-mapconnect') . ': ' . $PCLocality;
                 } else {
                     //insert data to return array
@@ -154,9 +174,9 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                         $name = empty( $AreaInfo['community']['name'] ) ? $pc->name : ',' . $pc->name;
                         
                         //query ig info
-                        $igInfo =  $extdb->get_results( $extdb->prepare( "SELECT * FROM events_igs WHERE id = %s", $pc->ig ) );
+                        $igInfo =  $db->get_results( $db->prepare( "SELECT * FROM " . $igTable . " WHERE id = %s", $pc->ig ) );
                         $AreaInfo['dimb-ig'] = [];
-                        if( $extdb->last_error ) { 
+                        if( $db->last_error ) { 
                             $AreaInfo[ 'error' ] = esc_html__('Error while requesting data for', 'tsu-mapconnect') . ': DIMB IG';
                         } else {
                             foreach ($igInfo as $ig) {                               
@@ -177,7 +197,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                         ];
                         $AreaInfo['updated'] = false;
                         
-                        if($name === "-1") {
+                        if( $name === "-1" || $name === '' || $name === null ) {
                             //query data at openplz api
                             $opPcRawData = \lib\util\TSUMHelpers::tsumGetLocation($pc->start);
                             $opPcData = \lib\util\TSUMHelpers::tsumMergeLocalities($opPcRawData['data']);
@@ -189,11 +209,11 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                                 "federalState" => $opPcData["federalState"]["name"]
                             ];  
                             //rewrite db entry
-                            $queryString = $extdb->prepare(
-                                    "UPDATE events_ig_plz SET name = %s, district = %s, federalState = %s WHERE start = %s;",
+                            $queryString = $db->prepare(
+                                    "UPDATE " . $pcTable . " SET name = %s, district = %s, federalState = %s WHERE start = %s;",
                                     $opPcData["name"], $opPcData["district"]["name"], $opPcData["federalState"]["name"], $pc->start
                             );
-                            $query = $extdb->query( $queryString );
+                            $query = $db->query( $queryString );
                             
                             if ( $query === false ) {
                                 $AreaInfo[ 'error' ] = esc_html__('Error updating database with data for community with postcode', 'tsu-mapconnect') . ': ' . $pc->start;                                
@@ -223,17 +243,31 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     public function tsumCheckAreaExists( $areaname ) {
         
         global $extdb;
+        global $wpdb;
+        
+        $table = $this->igTable;
         
         //check connection and connect $extdb if needed
-        $connect = $this->tsumConnectExternal( $this->tsumLoadConnectionParams() );
+        $connect = false;
+        //check connection and connect $extdb if needed, also set table
+        if ( $this->tsumIsLocal() === false ) {
+            $connect = $this->tsumConnectExternal( $this->tsumLoadConnectionParams() );
+        } else if( $this->tsumIsLocal() === true ) {
+            $connect = true;
+            $table = $this->tsumPFX . $table;
+        }        
         
         if ( $connect === false ) {
             return false;
         } else {
             //fix areaname       
             $fixedAName = \lib\util\TSUMHelpers::tsumFixDIMBQueryString($areaname);
-
-            $areaid = $extdb->get_var( $extdb->prepare( "SELECT id FROM events_igs WHERE name = %s", $fixedAName ) );  
+            
+            $queryString = "SELECT id FROM " . $table . " WHERE name = %s";
+            
+            $areaid = $this->tsumIsLocal() === true ? 
+                    $wpdb->get_var( $wpdb->prepare( $queryString, $fixedAName ) ) : 
+                    $extdb->get_var( $extdb->prepare( $queryString, $fixedAName ) );  
 
             if ( $areaid === null || !is_numeric( $areaid ) ) {
                 return false;
@@ -244,24 +278,48 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         
         return false;
     }
-    
+    /**
+     * tsumIsLocal()
+     * checks if we are set to local or external. Returns true if
+     * a local table inside the WordPress DB is used, false for
+     * external database table
+     * 
+     * @return bool
+     */
+    private function tsumIsLocal() {
+        $options = get_option( 'tsumMCOptions' );
+        
+        if ( !isset( $options['tsum_general_setting_db_simple'] ) || $options['tsum_general_setting_db_simple'] !== '1' ) {
+            return false;
+        } else {
+            return true;
+        }          
+    }
     public function tsumRetrieveAvailableAreas() {
         
-        global $extdb;
+        global $extdb; 
+        global $wpdb;
+
+        $table = $this->tsumIsLocal() === true ? $this->tsumPFX . $this->igTable : $this->igTable;
         
+        $connect = false;
         //check connection and connect $extdb if needed
-        $connect = $this->tsumConnectExternal( $this->tsumLoadConnectionParams() );
+        if ( $this->tsumIsLocal() === false ) {
+            $connect = $this->tsumConnectExternal( $this->tsumLoadConnectionParams() );
+        } else if( $this->tsumIsLocal() === true ) {
+            $connect = true;
+        }
         
         if ( $connect === false ) {
             return false;
         } else {
-            
+
             $arrayofAreas = [];
             
             //get available areas from database
-            $query = "SELECT * FROM " . $this->igTable;
+            $query = "SELECT * FROM " . $table;
             //run query, no sanization needed in this case
-            $result = $extdb->get_results( $query );
+            $result = $this->tsumIsLocal() === true ? $wpdb->get_results( $query ) : $extdb->get_results( $query );
             
             foreach ($result as $row) {
                 $igdata = [ 
@@ -281,6 +339,10 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     public function tsumRetrievePostCodesByAname( $areaname ) {
         
         global $extdb;
+        global $wpdb;
+        
+        //TODO: Make this function completely local compatible   
+        $isLocal = $this->tsumIsLocal();  
         
         //messages array
         $msg = [ 
@@ -294,7 +356,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         $fixedAName = \lib\util\TSUMHelpers::tsumFixDIMBQueryString($areaname);
         
         //check how we should do it
-        if ( !isset( $this->tsumParamTable ) || $this->tsumParamTable === '' || $this->tsumParamTable === false ) {
+        if ( (!isset( $this->tsumParamTable ) || $this->tsumParamTable === '' || $this->tsumParamTable === false ) && $isLocal === false ) {
             $postcodes = [ 
                 -1, 
                 $fixedAName, 
@@ -308,16 +370,15 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             //get connection parameters
             $conParams = $this->tsumLoadConnectionParams();
             
-            if ( empty( $conParams ) ) {
-                //no params found
+            if ( empty( $conParams ) && $isLocal === false ) {
                 $postcodes = [ -1, $fixedAName, $msg['disabled'], $msg['noconparams'] ]; 
             } else {
-                //connect, we have params
-                $extconnection = $this->tsumConnectExternal( $conParams );               
+                //connect, we have params. If this is only local, set connection to true per default and do not connect externally
+                $extconnection = $isLocal === true ? true : $this->tsumConnectExternal( $conParams );               
                 //get the codes now!
                 if ( $extconnection === true ) {
                     //all is good at this point, query external db
-                    $postcodes = $this->tsumGetPCArrayFromDB( $fixedAName, $extdb ); 
+                    $postcodes = $this->tsumGetPCArrayFromDB( $fixedAName, $isLocal === true ? $wpdb : $extdb ); 
                 } else {
                     $postcodes = [ -1, $fixedAName, $msg['disabled'], $msg['conerror'] ]; 
                 }
@@ -330,11 +391,15 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
     //set extendedData = true (default) to also retrieve name, district and federal state. 
     //Will use openPLZ to fill database if fields are -1. only done on first request.
     private function tsumGetPCArrayFromDB( $areaname, $db, $extendedData = true, $batchNum = 50 ) {
+
+        $igTable = $this->tsumIsLocal() === true ? $this->tsumPFX . $this->igTable : $this->igTable;
+        $pcTable = $this->tsumIsLocal() === true ? $this->tsumPFX . $this->pcTable : $this->pcTable;
+       
         
         //query ext db for the area id
-        $areaid = $db->get_var( $db->prepare( "SELECT id FROM events_igs WHERE name = %s", $areaname ) ); 
+        $areaid = $db->get_var( $db->prepare( "SELECT id FROM " . $igTable . " WHERE name = %s", $areaname ) ); 
         //query ext db for postcodes based on id
-        $postcodes = $db->get_results( $db->prepare( "SELECT * FROM events_ig_plz WHERE ig = %d", $areaid ) ); 
+        $postcodes = $db->get_results( $db->prepare( "SELECT * FROM " . $pcTable . " WHERE ig = %d", $areaid ) ); 
 
         $firstRun = false;
         
@@ -395,7 +460,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 }
                 //if updates have been done, refresh $postcodes array before outputting
                 if ( $reloadPCs === true ) {
-                    $postcodes = $db->get_results( $db->prepare( "SELECT * FROM events_ig_plz WHERE ig = %d", $areaid ) ); 
+                    $postcodes = $db->get_results( $db->prepare( "SELECT * FROM " . $pcTable . " WHERE ig = %d", $areaid ) ); 
                 }            
                 //return [ "querystring" => $queryString, "count total" => $pcrowcount, "count" => $pccount, "request keys" => $requestKeysNum ];
             }
@@ -557,6 +622,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         global $wpdb; //needed for local importing      
         
         $importDB = $useWPDB === false ? $extdb : $wpdb;
+        $prefix = $useWPDB === false ? "" : $this->tsumPFX;
         
         require_once TSU_MC_PLUGIN_PATH . '/lib/util/TSUMMsgHandler.php';
            
@@ -604,7 +670,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
         }
 
         //insert data into database at according columns. Truncate first
-        $query = "TRUNCATE TABLE " . $tableCSV;
+        $query = "TRUNCATE TABLE " . $prefix . $tableCSV;
         
         $result = true;
         
@@ -621,7 +687,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
             
             if( $tableCSV === $this->pcTable ){
                 
-                $changeQuery = "ALTER TABLE " . $tableCSV . " MODIFY COLUMN start varchar(8)";
+                $changeQuery = "ALTER TABLE " . $prefix . $tableCSV . " MODIFY COLUMN start varchar(8)";
                 $result = $importDB->query( $changeQuery );                 
                 if ( $result === false ) {
                     return false;
@@ -640,7 +706,7 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                     $columns =  "id, name, mail, aktiv, sewobe_id";  
                 }                
                 
-                $insertQuery = "INSERT INTO " . $tableCSV . " (" . $columns . ") VALUES " . $insertDataString;
+                $insertQuery = "INSERT INTO " . $prefix . $tableCSV . " (" . $columns . ") VALUES " . $insertDataString;
                 
                 $result = $importDB->query( $insertQuery );
                 
@@ -690,7 +756,37 @@ class TSUMDataHandler extends \lib\config\TSUMDBSettings {
                 COLUMNS;   
         
         $checkCreatePCTable = maybe_create_table( $wpdb->prefix . $this->pcTable, "CREATE TABLE {$pcTable} {$pc_sql_create} {$charset_collate}" );
-        $checkCreateIGTable = maybe_create_table( $wpdb->prefix . $this->igTable, "CREATE TABLE {$igTable} {$ig_sql_create} {$charset_collate}" );        
+        $checkCreateIGTable = maybe_create_table( $wpdb->prefix . $this->igTable, "CREATE TABLE {$igTable} {$ig_sql_create} {$charset_collate}" );      
+        
+        $import = [ parent::TSUM_TAB_IG_NAME => false, parent::TSUM_TAB_PC_NAME => false ]; //import
+       
+        
+        //check nonce and set update
+        if ( isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'import-table-columns' ) ) {
+             //set import
+            $import[ parent::TSUM_TAB_IG_NAME ] = isset( $_POST[parent::TSUM_TAB_IG_NAME] ) 
+                    && $_POST[parent::TSUM_TAB_IG_NAME] === 'IMPORT' ? true : false;    
+
+            $import[ parent::TSUM_TAB_PC_NAME ] = isset( $_POST[parent::TSUM_TAB_PC_NAME] ) 
+                    && $_POST[parent::TSUM_TAB_PC_NAME] === 'IMPORT' ? true : false;     
+        }     
+        //do import
+        if ( $import[ parent::TSUM_TAB_IG_NAME ] === true || $import[ parent::TSUM_TAB_PC_NAME  ] === true ) { 
+            
+            $import_table = $import[ parent::TSUM_TAB_PC_NAME  ] === true ? $this->pcTable : $this->igTable;
+            
+            //do the regular import stuff - we dont do backup of table here because this is internal
+            $rowsImported = $this->tsumPerformCSVImport( $import_table, true, true );      
+
+            if ( $rowsImported === false ) {
+                add_settings_error( 'tsumMCOptions', '2', esc_html__( 'No rows imported! Either file is empty or an error occured.', 'tsu-mapconnect' ) );
+            }
+            else {
+                echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Rows imported:', 'tsu-mapconnect') . ' ' . $rowsImported . '</p></div>';
+            }            
+           //echo 'Table to import to: ' . $import_table . ' | ';
+            
+        }        
         ?>
             <table class="widefat striped">
                 <tbody>

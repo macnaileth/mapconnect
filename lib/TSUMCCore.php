@@ -80,6 +80,7 @@ class TSUMCCore {
      */
     function tsumRegisterBlocks() {
             register_block_type( TSU_MC_PLUGIN_PATH. 'blocks/tsu-mapconnect-meta-block/' ); //metadata block
-            register_block_type( TSU_MC_PLUGIN_PATH. 'blocks/tsu-mapconnect-map-block/' ); //mapplication block for map placement
+            //COMMENTED OUT: TODO: Create completely new block
+            //register_block_type( TSU_MC_PLUGIN_PATH. 'blocks/tsu-mapconnect-map-block/' ); //mapplication block for map placement
     }    
 }
