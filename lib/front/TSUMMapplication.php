@@ -28,7 +28,7 @@ class TSUMMapplication {
         
         //for resetting, setup defaults
         $defaultParams = [ 
-            'metadata_url' => get_home_url() . '/wp-json/tsu-mapconnect/v1/area/aname' /* unused at the moment 01.02.2025 */, 
+            'metadata_url' => get_home_url() . '/wp-json/tsu-mapconnect/v1/area/aname', 
             'base_url' => 'https://dimb.api-spots.de', 
             'api_url' => 'https://dimb.api-spots.de', 
             'database_url' => '<DEFAULT>' /* unused at the moment 01.02.2025 */,
@@ -106,7 +106,8 @@ class TSUMMapplication {
                                     paths: {
                                         baseUrl: '" .  $params['base_url'] . "',
                                         apiBaseUrl: '" .  $params['api_url'] . "',
-                                        plugin: '/dimb/wp-content/plugins/tsu-mapconnect' 
+                                        plugin: '/dimb/wp-content/plugins/tsu-mapconnect',
+                                        metaDataURL: '" .  $params['metadata_url'] . "',
                                     }, 
                                     height: '" . $sanitizedHeight . "',
                                     addClasses: '" . $params['add_classes'] . "'
