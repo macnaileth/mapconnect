@@ -1,7 +1,7 @@
 === Map Connect Metadata and Map Application ===
 Contributors:      Marco Nagel & Kerstin Huppenbauer
 Tags:              block, database, club management, mapping, geodata, react, jsx, tsx, made for DIMB
-Tested up to:      6.4
+Tested up to:      6.9.1
 Stable tag:        0.1.0
 Requires PHP:      8.0
 License:           GPL-2.0-or-later
